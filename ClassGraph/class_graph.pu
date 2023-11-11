@@ -1,0 +1,40 @@
+@startuml
+
+package "Common" {
+    interface IStraightMover
+    interface ISideMover
+    interface IHungerManager
+}
+
+package "Player" {
+    interface IStraightMover
+}
+
+package "Enemy" {
+    class GrandmaMoveManager
+    class GrandmaAttackManager
+    class GrandmaRushMover
+    class GrandmaBallThrower
+    class GrandmaSideMover
+    class GrandmaStraightMover
+    class GrandmaAnimator
+    class GrandmaHungerManager
+}
+
+GrandmaAttackManager --> GrandmaRushMover
+GrandmaMoveManager --> GrandmaRushMover
+GrandmaMoveManager --> GrandmaBallThrower
+GrandmaAttackManager --> GrandmaBallThrower
+IStraightMover <-- GrandmaMoveManager
+ISideMover <-- GrandmaMoveManager
+IStraightMover <|.. GrandmaStraightMover
+ISideMover <|.. GrandmaSideMover
+GrandmaRushMover --> GrandmaAnimator
+GrandmaBallThrower --> GrandmaAnimator
+IHungerManager <-- GrandmaStraightMover
+IHungerManager <|.. GrandmaHungerManager
+IStraightMover <-- GrandmaRushMover
+IStraightMover <.. GrandmaRushMover
+ISideMover <.. GrandmaRushMover
+
+@enduml
