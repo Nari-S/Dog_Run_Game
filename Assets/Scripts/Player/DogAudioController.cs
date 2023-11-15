@@ -12,7 +12,13 @@ public class DogAudioController : MonoBehaviour
     [SerializeField] private List<AudioClip> eatingAudios;
     [SerializeField] private List<AudioClip> drinkingAudios;
 
-    private void Awake()
+    /* startに移動
+     * private void Awake()
+    {
+        if (!TryGetComponent(out audioSource)) Debug.Log("AudioSource is not attached to this object.");
+    }*/
+
+    private void Start()
     {
         if (!TryGetComponent(out audioSource)) Debug.Log("AudioSource is not attached to this object.");
     }

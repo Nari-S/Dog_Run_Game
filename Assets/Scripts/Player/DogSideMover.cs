@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UniRx;
 
 
 public class DogSideMover : MonoBehaviour, ISideMover
@@ -26,12 +27,14 @@ public class DogSideMover : MonoBehaviour, ISideMover
 
     private float timeExecutedInPrevFrame;
 
+    [SerializeField] private GameStatusManager gameStatusManager;
+
     private void Awake()
     {
         accelerometer = Vector3.zero;
         calculatedAccelerometer = Vector3.zero;
 
-        stepMover = GetComponent<IStepMover>();
+        // startで実行　stepMover = GetComponent<IStepMover>();
 
         accelerometerXQueue = new Queue<float>();
         queueSize = 5;
@@ -39,21 +42,36 @@ public class DogSideMover : MonoBehaviour, ISideMover
         timeExecutedInPrevFrame = Time.time;
     }
 
-    private void OnEnable()
+    private void Start()
+    {
+        stepMover = GetComponent<IStepMover>();
+
+        sideMoveAction.performed += GetAccelerometer;
+        sideMoveAction?.Enable();
+
+        mapWidth = 3f;
+
+        maxPhoneInclination = 0.5f;
+
+        maxSideMoveDistancePerSec = 30f;
+
+        /* ゲーム本編に遷移した際の時間を，前フレームに横移動が実行された時間にする */
+        gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.TitleToGame || gameStatusManager.gameStatus == GameStatusManager.GameStatus.Game).Subscribe(_ => timeExecutedInPrevFrame = Time.time).AddTo(this);
+    }
+
+    /* Startで実行
+     * private void OnEnable()
     {
         sideMoveAction.performed += GetAccelerometer;
         sideMoveAction?.Enable();
 
-        /* ?????i?K???????}?b?v?????????l?D?????I?????}?b?v???????Q?? */
         mapWidth = 3f;
 
-        /* ?X?}?z???????X???p?x???w?? */
         maxPhoneInclination = 0.5f;
 
-        /* ????????1?b???????????????[?????????? */
         //minMoveDistance = 0.01f;
         maxSideMoveDistancePerSec = 30f;
-    }
+    }*/
 
     private void OnDisable()
     {
@@ -65,6 +83,7 @@ public class DogSideMover : MonoBehaviour, ISideMover
     {
         if (stepMover.IsStepping) return Vector3.zero; //?X?e?b?v??????????????????
         if (calculatedAccelerometer == accelerometer) return Vector3.zero;
+        if (gameStatusManager.gameStatus != GameStatusManager.GameStatus.Game) return Vector3.zero;
 
         calculatedAccelerometer = accelerometer;
 

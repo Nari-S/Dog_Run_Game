@@ -16,13 +16,12 @@ public class DogStepMover : MonoBehaviour, IStepMover
     [SerializeField] private float stepDuration;
 
     [SerializeField] private InputActionAsset inputActionAsset;
-
     [SerializeField] private ReverseCameraManager reverseCameraManager;
 
     private DogAnimationManager dogAnimationManager;
-
     private HungerManager hungerManager;
 
+    [SerializeField] private GameStatusManager gameStatusManager;
 
     void Awake()
     {
@@ -35,6 +34,14 @@ public class DogStepMover : MonoBehaviour, IStepMover
         stepDistance = 1f;
         stepDuration = 0.5f;
 
+        /* Startで実行
+        dogAnimationManager = GetComponent<DogAnimationManager>();
+
+        hungerManager = GetComponent<HungerManager>();*/
+    }
+
+    private void Start()
+    {
         dogAnimationManager = GetComponent<DogAnimationManager>();
 
         hungerManager = GetComponent<HungerManager>();
@@ -51,6 +58,7 @@ public class DogStepMover : MonoBehaviour, IStepMover
         if (!context.performed) return;
         if (IsStepping) return;
         if (!hungerManager.canStep()) return;
+        if (gameStatusManager.gameStatus != GameStatusManager.GameStatus.Game) return;
 
         if (context.interaction.ToString() == "RightFlickInteraction") stepDistance = Mathf.Abs(stepDistance) * GetCameraDirectionInt();
         else if (context.interaction.ToString() == "LeftFlickInteraction") stepDistance = -Mathf.Abs(stepDistance) * GetCameraDirectionInt();

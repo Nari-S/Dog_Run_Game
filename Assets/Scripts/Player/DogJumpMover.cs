@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,11 +22,8 @@ public class DogJumpMover : MonoBehaviour, IJumpMover
     private DogAnimationManager dogAnimationManager;
     private DogAudioController dogAudioController;
 
-    /*[SerializeField] private float rayLength;
-    [SerializeField] private float rayOffset;
-    [SerializeField] private LayerMask layerMask;*/
+    [SerializeField] private GameStatusManager gameStatusManager;
 
-    // Start is called before the first frame update
     void Awake()
     {
         IsAscending = false;
@@ -39,6 +36,14 @@ public class DogJumpMover : MonoBehaviour, IJumpMover
         jumpHeight = 1f;
         jumpDuration = 0.5f;
 
+        /* Startに移動
+         * stepMover = GetComponent<IStepMover>();
+        dogAnimationManager = GetComponent<DogAnimationManager>();
+        dogAudioController = GetComponent<DogAudioController>();*/
+    }
+
+    private void Start()
+    {
         stepMover = GetComponent<IStepMover>();
         dogAnimationManager = GetComponent<DogAnimationManager>();
         dogAudioController = GetComponent<DogAudioController>();
@@ -55,6 +60,7 @@ public class DogJumpMover : MonoBehaviour, IJumpMover
         if (!context.performed) return;
         if (IsAscending || IsDescending) return;
         if (stepMover.IsStepping) return;
+        if (gameStatusManager.gameStatus != GameStatusManager.GameStatus.Game) return;
 
         IsAscending = true;
 

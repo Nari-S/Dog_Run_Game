@@ -10,7 +10,7 @@ public class DogAnimationManager : MonoBehaviour
     {
         dogAnimator = GetComponent<Animator>();
 
-        dogAnimator.SetBool("isRunning", true); //現状，ゲーム開始直後にダッシュスタート
+        // 別クラスに移動　dogAnimator.SetBool("isRunning", true); //現状，ゲーム開始直後にダッシュスタート
     }
 
     public void StartRunning()

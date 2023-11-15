@@ -15,6 +15,9 @@ public class ObstacleEventNotifier : MonoBehaviour, IObstacleReceivable
         _OnGameOverd = new Subject<Unit>();
     }
 
+    /// <summary>
+    /// 他クラスへゲームオーバ通知．
+    /// </summary>
     public void NotifyGameOverEvent()
     {
         _OnGameOverd.OnNext(Unit.Default);

@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "DownFlick",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "ChangeGameStatusTitleToGame",
+                    "type": "Value",
+                    "id": "c7828a9f-c96c-478f-90f3-de22a7e35fd7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -104,6 +113,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "TurnCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b7a65036-1a5c-4c23-ac2a-b2349329eaa6",
+                    "path": "<Touchscreen>/primaryTouch",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeGameStatusTitleToGame",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,18 +20,29 @@ public class PeeCreator : MonoBehaviour
     private Subject<Pee> _OnPeeCreated;
     public IObservable<Pee> OnPeeCreated => _OnPeeCreated;
 
+    [SerializeField] private GameStatusManager gameStatusManager;
+
     private void Awake()
     {
         peeSize = new Vector3(1f, 1f, 2f);
         peeDuration = 0.5f;
         peeWaterContentConsumption = 20f;
 
+        /* startで実行
         if (!TryGetComponent(out waterContentManager)) Debug.Log("IWaterContentManager is not attached to the object.");
         isAttachedPee = hitBoxCube.TryGetComponent<Pee>(out var _);
 
-        if (!TryGetComponent(out dogAudioController)) Debug.Log("DogAudioController is not attached to this object.");
+        if (!TryGetComponent(out dogAudioController)) Debug.Log("DogAudioController is not attached to this object."); */
 
         _OnPeeCreated = new Subject<Pee>();
+    }
+
+    private void Start()
+    {
+        if (!TryGetComponent(out waterContentManager)) Debug.Log("IWaterContentManager is not attached to the object.");
+        if (!(isAttachedPee = hitBoxCube.TryGetComponent<Pee>(out var _))) Debug.Log("IWaterContentManager is not attached to the object.");
+
+        if (!TryGetComponent(out dogAudioController)) Debug.Log("DogAudioController is not attached to this object.");
     }
 
     /// <summary>
@@ -41,6 +52,7 @@ public class PeeCreator : MonoBehaviour
     public void TriggerPee(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
+        if (gameStatusManager.gameStatus != GameStatusManager.GameStatus.Game) return;
 
         if (isAttachedPee)
         {
@@ -62,9 +74,10 @@ public class PeeCreator : MonoBehaviour
         }
     }
 
+    /* デバッグコード
     private void Update()
     {
-        /* if文内を上記のTriggerPeeにコピペすることで実機で動作 */
+        /* if文内を上記のTriggerPeeにコピペすることで実機で動作 
         if(Input.GetKeyDown(KeyCode.T))
         {
             if(isAttachedPee)
@@ -81,7 +94,7 @@ public class PeeCreator : MonoBehaviour
                 Debug.Log("Pee class is not attached to the object.");
             }
         }
-    }
+    }*/
 
     /// <summary>
     /// ションベンの当たり判定オブジェクトの生成位置

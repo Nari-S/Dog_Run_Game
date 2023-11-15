@@ -20,6 +20,8 @@ public class HungerManager : MonoBehaviour, IHungerManager
     [SerializeField] private float periodChangeAmount; // 定期的な腹減り度合いの更新量
     [SerializeField] private float stepConsumedHunger; // ステップ時に消費される腹減り度合い
 
+    [SerializeField] GameStatusManager gameStatusManager;
+
     /// <summary>
     /// デバッグ用．常に腹減り度を100とする
     /// </summary>
@@ -38,14 +40,11 @@ public class HungerManager : MonoBehaviour, IHungerManager
         hunger = new FloatReactiveProperty(70); // 腹減り度合いの初期値設定
         //hungerUpdateMount = new ReactiveProperty<float>(0);
 
-        this.UpdateAsObservable()
-            .ThrottleFirst(TimeSpan.FromSeconds(1))
-            .Subscribe(_ =>
-            {
-                UpdateHunger(-periodChangeAmount);
-                //Debug.Log(hunger.Value);
-            })
-            .AddTo(this);
+        this.UpdateAsObservable().Where(_ => gameStatusManager.gameStatus == GameStatusManager.GameStatus.Game).ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ =>
+        {
+            UpdateHunger(-periodChangeAmount);
+        })
+        .AddTo(this);
 
         //hungerUpdateMountChanged.Subscribe(x => UpdateHunger(x)).AddTo(this);
     }

@@ -772,6 +772,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 643816522}
+  transitionDurationTitleToGame: 0
+  transitionDurationGameToScore: 0
 --- !u!4 &96850514
 Transform:
   m_ObjectHideFlags: 0
@@ -2329,14 +2331,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: 0.3153592, y: 0, z: 0, w: 0.9489724}
-  m_LocalPosition: {x: 0, y: 5.5, z: -4.5}
+  m_LocalRotation: {x: 0, y: 0.9870944, z: -0.16013956, w: 0}
+  m_LocalPosition: {x: 0, y: 1.35, z: 3.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 253987870}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 36.765, y: -179.97, z: 0}
+  m_LocalEulerAnglesHint: {x: 18.43, y: 180, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2403,6 +2405,7 @@ MonoBehaviour:
   reverseCameraPosition: {x: 0, y: 5.5, z: 4.5}
   reverseCameraRotation: {x: 36.765, y: 180, z: 0}
   ReverseFlag_Debug: 0
+  gameStatusManager: {fileID: 96850513}
 --- !u!1 &337285736
 GameObject:
   m_ObjectHideFlags: 0
@@ -4856,6 +4859,7 @@ MonoBehaviour:
   inputActionAsset: {fileID: -944628639613478452, guid: f698f754141c4a4429ab0cfdc78dbb2e,
     type: 3}
   reverseCameraManager: {fileID: 330585549}
+  gameStatusManager: {fileID: 96850513}
 --- !u!114 &643816525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4889,6 +4893,7 @@ MonoBehaviour:
   mapWidth: 0
   maxPhoneInclination: 0
   maxSideMoveDistancePerSec: 0
+  gameStatusManager: {fileID: 96850513}
 --- !u!114 &643816526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4903,6 +4908,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpHeight: 0
   jumpDuration: 0
+  gameStatusManager: {fileID: 96850513}
 --- !u!114 &643816527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4915,6 +4921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f7932fe9b4b039499065228a5a59c62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameStatusManager: {fileID: 96850513}
 --- !u!114 &643816528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5049,6 +5056,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 1f16f9fa-f252-447f-b2a7-97ec22b11b26
     m_ActionName: Player/TurnCamera
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 96850513}
+        m_TargetAssemblyTypeName: GameStatusManager, Assembly-CSharp
+        m_MethodName: ChangeGameStatusTitleToGame
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: c7828a9f-c96c-478f-90f3-de22a7e35fd7
+    m_ActionName: Player/ChangeGameStatusTitleToGame
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -5066,6 +5089,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac93fa29eb3f54943a9d23b0de6b6248, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  standardPointObject: {fileID: 253987869}
+  gameStatusManager: {fileID: 96850513}
 --- !u!95 &643816530
 Animator:
   serializedVersion: 4
@@ -5131,6 +5156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   periodChangeAmount: 0
   stepConsumedHunger: 0
+  gameStatusManager: {fileID: 96850513}
 --- !u!114 &643816534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5148,6 +5174,7 @@ MonoBehaviour:
   peeWaterContentConsumption: 0
   hitBoxCube: {fileID: 5405746788116318981, guid: eae4cc144fc91ec47afa2635b3452f6c,
     type: 3}
+  gameStatusManager: {fileID: 96850513}
 --- !u!136 &643816535
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -7357,6 +7384,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_BlendShapeWeights.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7091266819408589525, guid: 5c844805b4bc02e49a710ae2140b9b9e,
+        type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[0]
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: -7023534804931618540, guid: 5c844805b4bc02e49a710ae2140b9b9e,
         type: 3}
@@ -17573,7 +17605,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: bdc2c06f519020347bb21d5a8cd9bad6, type: 3}
+      objectReference: {fileID: 8300000, guid: 87a1037cfffb61c418f7b75c549da514, type: 3}
     - target: {fileID: 3017074255057927654, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
         type: 3}
       propertyPath: playerCameraManager
