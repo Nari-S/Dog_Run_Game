@@ -12,7 +12,21 @@ public class GrandmaMoveManager : MonoBehaviour
     private GrandmaBallThrower ballThrower;
     private GrandmaStaggerMover staggerMover;
 
+    [SerializeField] private GameStatusManager gameStatusManager;
+
     private void Awake()
+    {
+        /* Startで実施
+        characterController = GetComponent<CharacterController>();
+        straightMover = GetComponent<IEnemyStraightMover>();
+        sideMover = GetComponent<IEnemySideMover>();
+        rushMover = GetComponent<GrandmaRushMover>();
+        ballThrower = GetComponent<GrandmaBallThrower>();
+        staggerMover = GetComponent<GrandmaStaggerMover>();
+        */
+    }
+
+    private void Start()
     {
         characterController = GetComponent<CharacterController>();
         straightMover = GetComponent<IEnemyStraightMover>();
@@ -24,6 +38,8 @@ public class GrandmaMoveManager : MonoBehaviour
 
     private void Update()
     {
+        if (gameStatusManager.gameStatus != GameStatusManager.GameStatus.Game) return;
+
         Vector3 moveVector = Vector3.zero;
         
         if(rushMover.rushPhase != GrandmaRushMover.RushPhase.OutOfRange)

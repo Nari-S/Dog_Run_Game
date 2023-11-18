@@ -16,11 +16,15 @@ public class GrandmaStraightMover : MonoBehaviour, IEnemyStraightMover
 
     private float timeExecutedInPrevFrame;
 
+    [SerializeField] private GameStatusManager gameStatusManager;
+
     private void Awake()
     {
         //hungerManager = GetComponent<IEnemyHungerManager>();
+        /* Startで実施
         if (!TryGetComponent(out hungerManager)) Debug.Log("IEnemyHungerManager is not attached");
         if (!TryGetComponent(out moveVectorRevisor)) Debug.Log("MoveVectorRevisorIntoDisplay is not attached");
+        */
 
         MaxSpeed = 6f;
         MinSpeed = 1f;
@@ -28,9 +32,11 @@ public class GrandmaStraightMover : MonoBehaviour, IEnemyStraightMover
         timeExecutedInPrevFrame = Time.time;
     }
 
-    /* Hungerの初期化はAwakeで行われているため，Startで初期化 （スクリプトの実行順を付けることでAwakeのみにできる？）*/
     private void Start()
     {
+        if (!TryGetComponent(out hungerManager)) Debug.Log("IEnemyHungerManager is not attached");
+        if (!TryGetComponent(out moveVectorRevisor)) Debug.Log("MoveVectorRevisorIntoDisplay is not attached");
+
         dashSpeedAdjustmentNum = hungerManager.MaxHunger / (MaxSpeed - MinSpeed);
 
         hungerManager.Hunger
@@ -38,6 +44,9 @@ public class GrandmaStraightMover : MonoBehaviour, IEnemyStraightMover
                 StraightMoveSpeed = ConvertHungerToSpeed(hungerValue);
             })
             .AddTo(this);
+
+        /* ゲーム本編遷移時，正面移動が行われた時刻を現在時刻に更新 */
+        gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.Game).Subscribe(_ => timeExecutedInPrevFrame = Time.time).AddTo(this);
     }
 
     public Vector3 GetStraightMoveVector()

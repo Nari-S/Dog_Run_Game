@@ -1,6 +1,7 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class GrandmaSideMover : MonoBehaviour, IEnemySideMover
 {
@@ -10,11 +11,19 @@ public class GrandmaSideMover : MonoBehaviour, IEnemySideMover
 
     private float timeExecutedInPrevFrame;
 
+    [SerializeField] private GameStatusManager gameStatusManager;
+
     private void Awake()
     {
         maxSideMoveDistancePerSec = 0.5f; // 1秒間の最大移動距離
 
         timeExecutedInPrevFrame = Time.time;
+    }
+
+    private void Start()
+    {
+        /* ゲーム本編遷移時，横移動が行われた時刻を現在時刻に更新 */
+        gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.Game).Subscribe(_ => timeExecutedInPrevFrame = Time.time).AddTo(this);
     }
 
     public Vector3 GetSideMoveVector()

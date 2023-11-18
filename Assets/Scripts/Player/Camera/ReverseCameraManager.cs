@@ -52,6 +52,7 @@ public class ReverseCameraManager : MonoBehaviour
 
     private void Start()
     {
+        /* タイトル→ゲーム本編時に，柴犬周りをカメラが回転する処理 */
         gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.TitleToGame).Subscribe(_ =>
         {
             var dotweenSequence = DOTween.Sequence();

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
@@ -35,7 +35,7 @@ public class GrandmaAttackManager : MonoBehaviour, IPeeReceivable
 
     private float normalizedInversionDistancePeeToEnemy;
 
-
+    [SerializeField] private GameStatusManager gameStatusManager;
 
     /// <summary>
     /// 攻撃ステータスを怯みにする．ションベンとの当たり判定時に呼ばれる
@@ -121,12 +121,19 @@ public class GrandmaAttackManager : MonoBehaviour, IPeeReceivable
             .AddTo(this);
     }
 
+    private void Start()
+    {
+        /* ゲーム本編遷移時，投擲攻撃までのカウント起点時間リセット */
+        gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.Game).Subscribe(_ => attackCountOriginTime = Time.time).AddTo(this);
+    }
+
     private void Update()
     {
         //Debug.Log("AttackStatus: " + attackStatus + ", rushPhase: " + grandmaRushMover.rushPhase + ", ballThrowPhase:" + grandmaBallThrower.ballThrowPhase);
         //Debug.Log(grandmaStaggerMover.staggerPhase);
 
-        /* switch文動作未確認 */
+        if (gameStatusManager.gameStatus != GameStatusManager.GameStatus.Game) return; // ゲーム本編以外では，攻撃は行わない
+
         switch(attackStatus)
         {
             /* 突進と投擲の開始条件判定 */

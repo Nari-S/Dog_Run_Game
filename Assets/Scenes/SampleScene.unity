@@ -17605,7 +17605,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 87a1037cfffb61c418f7b75c549da514, type: 3}
+      objectReference: {fileID: 0}
+    - target: {fileID: 1941273446695796176, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
+        type: 3}
+      propertyPath: gameStatusManager
+      value: 
+      objectReference: {fileID: 96850513}
+    - target: {fileID: 3011446738367265450, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
+        type: 3}
+      propertyPath: gameStatusManager
+      value: 
+      objectReference: {fileID: 96850513}
     - target: {fileID: 3017074255057927654, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
         type: 3}
       propertyPath: playerCameraManager
@@ -17616,6 +17626,11 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 643816522}
+    - target: {fileID: 6414988443538268858, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
+        type: 3}
+      propertyPath: gameStatusManager
+      value: 
+      objectReference: {fileID: 96850513}
     - target: {fileID: 7296925078022426208, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
         type: 3}
       propertyPath: m_RootOrder
@@ -17624,7 +17639,7 @@ PrefabInstance:
     - target: {fileID: 7296925078022426208, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7296925078022426208, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
         type: 3}
@@ -17634,7 +17649,7 @@ PrefabInstance:
     - target: {fileID: 7296925078022426208, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.97
+      value: -1.35
       objectReference: {fileID: 0}
     - target: {fileID: 7296925078022426208, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
         type: 3}
@@ -17671,16 +17686,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7305799068275450578, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
+        type: 3}
+      propertyPath: gameStatusManager
+      value: 
+      objectReference: {fileID: 96850513}
     - target: {fileID: 7473588809725941521, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
         type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 643816523}
+    - target: {fileID: 7473588809725941521, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
+        type: 3}
+      propertyPath: gameStatusManager
+      value: 
+      objectReference: {fileID: 96850513}
     - target: {fileID: 7504934816639221429, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
         type: 3}
       propertyPath: dogTransform
       value: 
       objectReference: {fileID: 643816523}
+    - target: {fileID: 7504934816639221429, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
+        type: 3}
+      propertyPath: gameStatusManager
+      value: 
+      objectReference: {fileID: 96850513}
     - target: {fileID: 7928642248526976218, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
         type: 3}
       propertyPath: m_Name
