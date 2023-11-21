@@ -16,4 +16,9 @@ public class WHpTextView : MonoBehaviour
     {
         whpText.text = whp.ToString();
     }
+
+    public void ActivateWHpText()
+    {
+        whpText.enabled = true;
+    }
 }

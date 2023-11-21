@@ -17,4 +17,9 @@ public class HpTextView : MonoBehaviour
     {
         hpText.text = hp.ToString();
     }
+
+    public void ActivateHpText()
+    {
+        hpText.enabled = true;
+    }
 }

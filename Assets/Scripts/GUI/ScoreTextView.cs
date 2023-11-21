@@ -17,4 +17,9 @@ public class ScoreTextView : MonoBehaviour
     {
         scoreText.text = score.ToString();
     }
+
+    public void ActivateScoreText()
+    {
+        scoreText.enabled = true;
+    }
 }

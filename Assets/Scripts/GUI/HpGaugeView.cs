@@ -21,4 +21,9 @@ public class HpGaugeView : MonoBehaviour
                 hpRate,
                 duration: 0.5f);
     }
+
+    public void ActivateHpGauge()
+    {
+        hpGaugeImage.enabled = true;
+    }
 }

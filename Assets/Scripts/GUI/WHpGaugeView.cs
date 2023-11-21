@@ -20,4 +20,9 @@ public class WHpGaugeView : MonoBehaviour
                 whpRate,
                 duration: 0.5f);
     }
+
+    public void ActivateWHpGauge()
+    {
+        WhpGaugeImage.enabled = true;
+    }
 }
