@@ -150,6 +150,7 @@ package GameManager {
     'class GameOverEventHandler
     class GameStatusManager
     class ScoreCounter
+    class ScoreRankIO
 }
 
 'GameManager⇔Player
@@ -159,5 +160,6 @@ GameStatusManager --> IObstacleReceivable
 GameStatusManager --> IHungerManager
 ScoreCounter --> PeeCreator
 ScoreCounter ..> Pee
+ScoreCounter ..> ScoreRankIO
 
 @enduml

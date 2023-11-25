@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using NCMB;
 
 public class GUIPresenter : MonoBehaviour
 {
@@ -24,6 +25,12 @@ public class GUIPresenter : MonoBehaviour
 
     [SerializeField] TitleTextView titleTextView;
     [SerializeField] TapToStartTextView tapToStartTextView;
+
+    [SerializeField] ScorePanelView scorePanelView;
+    [SerializeField] CapturedTextView capturedTextView;
+    [SerializeField] ScoreResultTextView scoreResultTextView;
+    [SerializeField] ScoreRankingTextView scoreRankingTextView;
+    [SerializeField] TapToRestartTextView tapToRestartTextView;
 
     [SerializeField] private GameStatusManager gameStatusManager;
 
@@ -72,6 +79,19 @@ public class GUIPresenter : MonoBehaviour
             tapToStartTextView.DeactivateTapToStartText();
         })
         .AddTo(this);
-        
+
+        /* スコア画面遷移時，スコア画面のUI表示 */
+        gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.Score).Subscribe(_ =>
+        {
+            scorePanelView.activateScorePanelImage();
+            capturedTextView.ActivateCapturedText();
+            scoreResultTextView.ActivateScoreResultText(scoreCounter.totalScore);
+            scoreRankingTextView.ActivateScoreRankingText();
+            tapToRestartTextView.ActivateTapToRestartText();
+        })
+        .AddTo(this);
+
+        /* スコアランキングダウンロードの通知をトリガーにして，スコアランキングテキストを更新 */
+        scoreCounter.scoreRankUpdated.Subscribe(x => { scoreRankingTextView.SetScoreRanking(x); }).AddTo(this);
     }
 }
