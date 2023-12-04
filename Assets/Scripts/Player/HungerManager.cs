@@ -34,10 +34,10 @@ public class HungerManager : MonoBehaviour, IHungerManager
     {
         MinHunger = 0;
         MaxHunger = 100;
-        periodChangeAmount = 2;
+        periodChangeAmount = 1;
         stepConsumedHunger = 15f;
 
-        hunger = new FloatReactiveProperty(70); // 腹減り度合いの初期値設定
+        hunger = new FloatReactiveProperty(80); // 腹減り度合いの初期値設定
         //hungerUpdateMount = new ReactiveProperty<float>(0);
 
         this.UpdateAsObservable().Where(_ => gameStatusManager.gameStatus == GameStatusManager.GameStatus.Game).ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ =>
