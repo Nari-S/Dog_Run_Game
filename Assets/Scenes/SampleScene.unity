@@ -861,7 +861,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 0.05
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -18875,6 +18875,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 643816522}
     - target: {fileID: 6414988443538268858, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
+        type: 3}
+      propertyPath: gameStatusManager
+      value: 
+      objectReference: {fileID: 96850513}
+    - target: {fileID: 6554473708816782524, guid: f72b7251e64b6be4b95cbfe85a3ab17a,
         type: 3}
       propertyPath: gameStatusManager
       value: 
