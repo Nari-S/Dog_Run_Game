@@ -25,10 +25,10 @@ public class HungerManager : MonoBehaviour, IHungerManager
     /// <summary>
     /// デバッグ用．常に腹減り度を100とする
     /// </summary>
-    /*private void Update()
+    private void Update()
     {
         hunger.Value = MaxHunger;
-    }*/
+    }
 
     private void Awake()
     {
