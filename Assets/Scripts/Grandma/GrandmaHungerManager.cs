@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -44,7 +44,7 @@ public class GrandmaHungerManager : MonoBehaviour, IEnemyHungerManager, IPeeRece
         peeMaxAdditionalDamage = 40f;
 
         hungerIncreaseFreqs = new List<float>() { 1.4f, 1.2f, 1.0f, 0.8f, 0.6f, 0.4f, 0.2f };
-        hungerIncreaseFreqsChangeFreq = 30f;
+        hungerIncreaseFreqsChangeFreq = 20f;
         speedUpAmountPerFreq = 1;
 
         hunger = new FloatReactiveProperty(initialHunger); // 腹減り度合いの初期値設定 
@@ -65,7 +65,7 @@ public class GrandmaHungerManager : MonoBehaviour, IEnemyHungerManager, IPeeRece
                 .Subscribe(___ =>
                 {
                     UpdateHunger(speedUpAmountPerFreq);
-                    Debug.Log((hungerIncreaseFreqs[Mathf.Clamp((int)((Time.time - gameStartTime) / hungerIncreaseFreqsChangeFreq), 0, hungerIncreaseFreqs.Count - 1)]));
+                    //Debug.Log((hungerIncreaseFreqs[Mathf.Clamp((int)((Time.time - gameStartTime) / hungerIncreaseFreqsChangeFreq), 0, hungerIncreaseFreqs.Count - 1)]));
                 });
             }).AddTo(this);
 
@@ -78,6 +78,6 @@ public class GrandmaHungerManager : MonoBehaviour, IEnemyHungerManager, IPeeRece
         else if ((hunger.Value + changeAmount) > MaxHunger) hunger.Value = MaxHunger;
         else hunger.Value += changeAmount;
 
-        //Debug.Log("grandmaHungerChangeAmount: " + changeAmount + ", afterChangedHunger: " + hunger.Value);
+        Debug.Log("grandmaHungerChangeAmount: " + changeAmount + ", afterChangedHunger: " + hunger.Value);
     }
 }

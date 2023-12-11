@@ -76,21 +76,12 @@ public class MapManager : MonoBehaviour
 
         commonMapLength = mapWidthReference.terrainData.size.z;
 
-        var objectCreationFrequency = new Dictionary<ObjectType, int>() {
-            { ObjectType.HealingItem, 5 }, { ObjectType.DamageItem, 5}, { ObjectType.WaterDrop, 5 }, { ObjectType.Obstacle, 5 }
-        };
-        var appearanceConflictions = new List<AppearanceConfliction>() {
-            { new AppearanceConfliction(ObjectType.HealingItem, ObjectType.DamageItem) },
-            { new AppearanceConfliction(ObjectType.HealingItem, ObjectType.WaterDrop) },
-            { new AppearanceConfliction(ObjectType.DamageItem, ObjectType.WaterDrop) },
-        };
-
-        if (TryGetComponent(out objectOnRoadGenerator)) objectOnRoadGenerator.Init(objectCreationFrequency, appearanceConflictions);
+        if (TryGetComponent(out objectOnRoadGenerator)) objectOnRoadGenerator.Init();
         else Debug.Log("objectOnRoadGenerator is not attached to GameObject.");
 
         objectCreationInfos = new Dictionary<ObjectType, ObjectCreationInfo>()
         {
-            { ObjectType.HealingItem, new ObjectCreationInfo() }, { ObjectType.DamageItem, new ObjectCreationInfo() }, { ObjectType.WaterDrop, new ObjectCreationInfo() }, { ObjectType.Obstacle, new ObjectCreationInfo() }
+            { ObjectType.HealingItem, new ObjectCreationInfo() }, { ObjectType.DamageItem, new ObjectCreationInfo() }, { ObjectType.WaterDrop, new ObjectCreationInfo() }, { ObjectType.Obstacle, new ObjectCreationInfo() }, { ObjectType.Animal, new ObjectCreationInfo() }
         };
 
         /* オブジェクト生成位置の取得 */
@@ -130,11 +121,12 @@ public class MapManager : MonoBehaviour
             var createdMapTransform = CreateMap(nextMonitoringMapForFrontCreating.position + new Vector3(0, 0, commonMapLength * 2));
 
             /* 新規作成マップ上にオブジェクトを作成 */
-            var selectedObjectCreationInfos = CreateObjectsOnRoad(createdMapTransform, nextMonitoringMapForFrontCreating.position + new Vector3(0, 0, commonMapLength * 2));
+            var selectedObjectCreationInfos = CreateObjectsOnRoad(createdMapTransform, nextMonitoringMapForFrontCreating.position + new Vector3(0, 0, commonMapLength * 2), nextMonitoringMapForRearDeleting.position);
 
-            activeMapChildren.Add(new ActiveMapChildren(createdMapTransform, selectedObjectCreationInfos));
+            /* マップとオブジェクト（動物除く）を有効化オブジェクトリストに追加する．マップを非有効化する際，このリストを参照してマップ上オブジェクトを非有効化する．（動物の非有効化処理は，自身で行う） */
+            activeMapChildren.Add(new ActiveMapChildren(createdMapTransform, selectedObjectCreationInfos.Where(x => x.Key != ObjectType.Animal).ToDictionary(d => d.Key, d => d.Value)));
 
-            /* 前方奥から2番目のマップを監視対象に設定 */
+            /* 前方奥から2番目のマップを監視対象に設定（最奥のマップは，上記CreateMapメソッドで作成したもの */
             nextMonitoringMapForFrontCreating = activeChildrenMapTransform[activeChildrenMapTransform.Count - 2];
 
             /* マップ生成数をカウント */
@@ -157,7 +149,7 @@ public class MapManager : MonoBehaviour
     /// <param name="createdMapTransform">直前に生成されたマップのTransform</param>
     /// <param name="mapPosition">直前に生成されたマップの座標</param>
     /// <returns></returns>
-    private Dictionary<ObjectType, ObjectCreationInfo> CreateObjectsOnRoad(Transform createdMapTransform, Vector3 mapPosition)
+    private Dictionary<ObjectType, ObjectCreationInfo> CreateObjectsOnRoad(Transform createdMapTransform, Vector3 frontMapPosition, Vector3 rearMapPosition)
     {
         int randNum;
         usedRaneNumbers.Clear();
@@ -175,7 +167,7 @@ public class MapManager : MonoBehaviour
                         usedRaneNumbers.Add(randNum);
 
                         /* オブジェクトの位置を右記座標に指定． x座標：分割したレーンのいずれか．y座標：オブジェクトの元の座標．z座標：マップ範囲内でランダム */
-                        x.Value.creationObject.transform.position = new Vector3(objectsCreationPositions[randNum], x.Value.creationObject.transform.position.y, mapPosition.z + commonMapLength * UnityEngine.Random.Range(0.5f,0.95f));
+                        x.Value.creationObject.transform.position = new Vector3(objectsCreationPositions[randNum], x.Value.creationObject.transform.position.y, frontMapPosition.z + commonMapLength * UnityEngine.Random.Range(0.5f,0.95f));
                         x.Value.creationObject.SetActive(true);
                         break;
 
@@ -185,12 +177,20 @@ public class MapManager : MonoBehaviour
                         usedRaneNumbers.Add(randNum);
 
                         /* オブジェクトの位置を右記座標に指定． x座標：分割したレーンのいずれか．y座標：オブジェクトの元の座標．z座標：マップ縦方向中心 */
-                        x.Value.creationObject.transform.position = new Vector3(objectsCreationPositions[randNum], x.Value.creationObject.transform.position.y, mapPosition.z + 0.5f);
+                        x.Value.creationObject.transform.position = new Vector3(objectsCreationPositions[randNum], x.Value.creationObject.transform.position.y, frontMapPosition.z + 0.5f);
                         x.Value.creationObject.SetActive(true);
-                        /* 子オブジェクトも有効化 */
+                        /* 子オブジェクトも有効化(以前の出現時に取得されていると非有効化されているため)　これ，WaterDropのOnDisableで実現できないか？*/ 
                         var waterDrops = x.Value.creationObject.transform.OfType<Transform>()/*.Select(z => { z.gameObject.SetActive(true); Debug.Log(z.gameObject.name); return z; })*/;
                         foreach (var waterDrop in waterDrops) waterDrop.gameObject.SetActive(true);
 
+                        break;
+
+                    case ObjectType.Animal:
+                        /* オブジェクトの位置を右記座標に指定． x座標：分割したレーン内でランダム．y座標：オブジェクトの元の座標．z座標：フラグisAnimalCreatedFrontに基づいてマップ最奥 or 最前 */
+                        /* 12/9 出現頻度の変化を実現 */
+                        x.Value.creationObject.transform.position = new Vector3(UnityEngine.Random.Range(objectsCreationPositions[0], objectsCreationPositions[objectsCreationPositions.Count - 1]), x.Value.creationObject.transform.position.y, x.Value.isAnimalCreatedFront ? frontMapPosition.z : rearMapPosition.z);
+                        x.Value.creationObject.transform.localEulerAngles = new Vector3(0, 180f * Convert.ToInt16(x.Value.isAnimalCreatedFront), 0); // プレイヤーの方向を向く
+                        x.Value.creationObject.SetActive(true);
                         break;
                 }
                 return x;
@@ -282,6 +282,13 @@ public class MapManager : MonoBehaviour
         activeChildMapTransform.position = deactivationMapPosition;
     }
 
+    /// <summary>
+    /// 端のマップがカメラ外に出たか判定．
+    /// </summary>
+    /// <param name="rearFurthestCameraPositionZ">手前側カメラ端の座標</param>
+    /// <param name="frontFurthestCameraPositionZ">奥側カメラ端の座標</param>
+    /// <param name="endMapPosition">最前 or 最奥側のマップ端座標</param>
+    /// <returns></returns>
     private bool IsEndOfMapOutOfCamera(float rearFurthestCameraPositionZ, float frontFurthestCameraPositionZ, Vector3 endMapPosition)
     {
         return endMapPosition.z < rearFurthestCameraPositionZ || frontFurthestCameraPositionZ < endMapPosition.z ? true : false;

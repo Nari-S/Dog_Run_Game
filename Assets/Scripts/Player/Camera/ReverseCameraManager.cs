@@ -44,6 +44,7 @@ public class ReverseCameraManager : MonoBehaviour
         reverseCameraPosition = new Vector3(0, 5.5f, 4.5f);
         reverseCameraRotation = new Vector3(36.765f, 180f, 0);
 
+        /* カメラ端奥側，手前側のワールド座標を取得 */
         MaxFurthestPointInViewFront = flontCameraPosition.y / Mathf.Tan((flontCameraRotation.x - camera.fieldOfView / 2f) * Mathf.Deg2Rad) + flontCameraPosition.z + standardPointObject.transform.position.z;
         MaxFurthestPointInViewRear = - reverseCameraPosition.y / Mathf.Tan((reverseCameraRotation.x - camera.fieldOfView / 2f) * Mathf.Deg2Rad) + reverseCameraPosition.z + standardPointObject.transform.position.z;
 
@@ -114,6 +115,7 @@ public class ReverseCameraManager : MonoBehaviour
 
     private void Update()
     {
+        /* カメラ端奥側，手前側のワールド座標を取得 */
         MaxFurthestPointInViewFront = flontCameraPosition.y / Mathf.Tan((flontCameraRotation.x - camera.fieldOfView / 2f) * Mathf.Deg2Rad) + flontCameraPosition.z + standardPointObject.transform.position.z;
         MaxFurthestPointInViewRear = - reverseCameraPosition.y / Mathf.Tan((reverseCameraRotation.x - camera.fieldOfView / 2f) * Mathf.Deg2Rad) + reverseCameraPosition.z + standardPointObject.transform.position.z;
 
