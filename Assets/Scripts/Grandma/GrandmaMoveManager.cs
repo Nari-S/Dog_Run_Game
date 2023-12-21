@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -6,31 +6,19 @@ using UniRx;
 public class GrandmaMoveManager : MonoBehaviour
 {
     private CharacterController characterController;
-    private IEnemyStraightMover straightMover;
-    private IEnemySideMover sideMover;
+    private GrandmaStraightMover straightMover;
+    private GrandmaSideMover sideMover;
     private GrandmaRushMover rushMover;
     private GrandmaBallThrower ballThrower;
     private GrandmaStaggerMover staggerMover;
 
     [SerializeField] private GameStatusManager gameStatusManager;
 
-    private void Awake()
-    {
-        /* Startで実施
-        characterController = GetComponent<CharacterController>();
-        straightMover = GetComponent<IEnemyStraightMover>();
-        sideMover = GetComponent<IEnemySideMover>();
-        rushMover = GetComponent<GrandmaRushMover>();
-        ballThrower = GetComponent<GrandmaBallThrower>();
-        staggerMover = GetComponent<GrandmaStaggerMover>();
-        */
-    }
-
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
-        straightMover = GetComponent<IEnemyStraightMover>();
-        sideMover = GetComponent<IEnemySideMover>();
+        straightMover = GetComponent<GrandmaStraightMover>();
+        sideMover = GetComponent<GrandmaSideMover>();
         rushMover = GetComponent<GrandmaRushMover>();
         ballThrower = GetComponent<GrandmaBallThrower>();
         staggerMover = GetComponent<GrandmaStaggerMover>();
@@ -62,7 +50,7 @@ public class GrandmaMoveManager : MonoBehaviour
 
         normalMove();
 
-        characterController.Move(moveVector); // いらなくね？
+        //characterController.Move(moveVector); // いらなくね？
     }
 
     /* 突進・投擲中でないときの移動 */

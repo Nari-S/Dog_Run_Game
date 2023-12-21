@@ -60,7 +60,7 @@ public class GrandmaAttackManager : MonoBehaviour, IPeeReceivable
         DistanceToStartRushing = 3f;
         DistanceToCancelRushing = 4f;
         var rushPreparationDuration = 2000;
-        var cooldownDuration = 4000;
+        var cooldownDuration = 1000;
         var cooldownMoveMagnification = 0.0f;
 
         /* 投擲攻撃パラメータの初期化 */
@@ -69,9 +69,9 @@ public class GrandmaAttackManager : MonoBehaviour, IPeeReceivable
         maxThrowingCooldownDuration = 3.0f;
         throwingCooldownDuration = Random.Range(minThrowingCooldownDuration, maxThrowingCooldownDuration); // 投擲攻撃までの時間リセット
         BallThrowParamRange ballThrowParamRange = new BallThrowParamRange(
-            MinBallSize: 0.3f, MaxBallSize: 0.7f, MinBallSpeedPerSec: 10f, MaxBallSpeedPerSec: 15f, MinBallThrowingPreparationDuration: 2000,
+            MinBallSize: 0.6f, MaxBallSize: 0.7f, MinBallSpeedPerSec: 15f, MaxBallSpeedPerSec: 20f, MinBallThrowingPreparationDuration: 2000,
             MaxBallThrowingPreparationDuration: 2000, MinBallThrowingDuration: 500, MaxBallThrowingDuration: 500, MinPreparationDecelerationMagnification: 0.8f,
-            MaxPreparationDecelerationMagnification: 0.8f, MinThrowingDecelerationMagnification: 0.7f, MaxThrowingDecelerationMagnification: 0.7f);
+            MaxPreparationDecelerationMagnification: 0.8f, MinThrowingDecelerationMagnification: 0.9f, MaxThrowingDecelerationMagnification: 0.9f);
 
         grandmaRushMover.Init(DistanceToStartRushing, rushPreparationDuration, cooldownDuration, cooldownMoveMagnification); // 突進クラス初期化
         grandmaBallThrower.Init(ballThrowParamRange);
@@ -81,12 +81,13 @@ public class GrandmaAttackManager : MonoBehaviour, IPeeReceivable
         cancellationTokenSource = new CancellationTokenSource();
         Token = cancellationTokenSource.Token;
 
+        /* 突進攻撃のクールダウンが終了 or ションベンにより強制終了した際，各種変数の初期化 */
         grandmaRushMover.rushPhaseChanged
             .Subscribe(x =>
             {
                 if (x != GrandmaRushMover.RushPhase.OutOfRange) return;
 
-                if (attackStatus == AttackStatus.Stagger) ; // 突進終了 or キャンセル後，攻撃ステータスがStaggerであれば維持する（何もしない）
+                if (attackStatus == AttackStatus.Stagger) ; // 突進終了 or キャンセル後，攻撃ステータスがStaggerであれば維持する（ションベンをくらった際は維持する）
                 else attackStatus = AttackStatus.None; // 攻撃ステータスがStaggerでなければ攻撃判定ステータスにする
 
                 attackCountOriginTime = Time.time; // 投擲攻撃までのカウント起点時間リセット
@@ -94,12 +95,13 @@ public class GrandmaAttackManager : MonoBehaviour, IPeeReceivable
             })
             .AddTo(this);
 
+        /* 投擲攻撃が終了 or ションベンにより強制終了した際，各種変数の初期化 */
         grandmaBallThrower.ballThrowPhaseChanged
             .Subscribe(x =>
             {
                 if (x != GrandmaBallThrower.BallThrowPhase.OutOfPeriod) return;
 
-                if (attackStatus == AttackStatus.Stagger) ; // 投擲終了 or キャンセル後，attackStatusがStaggerであれば維持する（何もしない）
+                if (attackStatus == AttackStatus.Stagger) ; // 投擲終了 or ションベン受けた後，attackStatusがStaggerであれば維持する（ションベンをくらった際は維持する）
                 else if (grandmaRushMover.rushPhase != GrandmaRushMover.RushPhase.OutOfRange) attackStatus = AttackStatus.Rushing; // 投擲終了 or キャンセル後，突進クラスが突進状態であれば，このクラスの攻撃ステータスも突進状態とする
                 else attackStatus = AttackStatus.None; // 怯み中でも突進中でもなければ攻撃判定ステータスにする
 
@@ -108,12 +110,13 @@ public class GrandmaAttackManager : MonoBehaviour, IPeeReceivable
             })
             .AddTo(this);
 
+        /* 怯みが終了した際，各種変数の初期化 */
         grandmaStaggerMover.staggerPhaseChanged
             .Subscribe(x =>
             {
                 if (x != GrandmaStaggerMover.StaggerPhase.OutOfPeriod) return;
 
-                attackStatus = AttackStatus.None;
+                attackStatus = AttackStatus.None; // 攻撃判定ステータスにする
 
                 attackCountOriginTime = Time.time; // 投擲攻撃までのカウント起点時間リセット
                 throwingCooldownDuration = Random.Range(minThrowingCooldownDuration, maxThrowingCooldownDuration); // 投擲攻撃までの時間リセット
@@ -127,17 +130,19 @@ public class GrandmaAttackManager : MonoBehaviour, IPeeReceivable
         gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.Game).Subscribe(_ => attackCountOriginTime = Time.time).AddTo(this);
     }
 
+    /// <summary>
+    /// 突進・投擲・怯みのタイミング管理を行う．
+    /// </summary>
     private void Update()
     {
-        //Debug.Log("AttackStatus: " + attackStatus + ", rushPhase: " + grandmaRushMover.rushPhase + ", ballThrowPhase:" + grandmaBallThrower.ballThrowPhase);
-        //Debug.Log(grandmaStaggerMover.staggerPhase);
 
         if (gameStatusManager.gameStatus != GameStatusManager.GameStatus.Game) return; // ゲーム本編以外では，攻撃は行わない
 
         switch(attackStatus)
         {
-            /* 突進と投擲の開始条件判定 */
+            /* 通常移動状態．突進と投擲の開始条件判定 */
             case AttackStatus.None:
+                /* 突進攻撃の開始条件を満たした場合，突進攻撃開始 */
                 if (MeetStartingRequirementForRushing())
                 {
                     attackStatus = AttackStatus.Rushing;
@@ -145,6 +150,7 @@ public class GrandmaAttackManager : MonoBehaviour, IPeeReceivable
                     _ = grandmaRushMover.StartRushing(Token);
                 }
 
+                /* 投擲攻撃の開始条件を満たした場合，投擲攻撃開始 */
                 else if (MeetStartingRequirementForThrowing())
                 {
                     attackStatus = AttackStatus.ThrowingBall;
@@ -188,7 +194,6 @@ public class GrandmaAttackManager : MonoBehaviour, IPeeReceivable
 
             /* 怯みにより，攻撃をキャンセルし静止する */
             case AttackStatus.Stagger:
-                //Debug.Log("AttackStatus is Stagger");
 
                 if (MeetStartingRequirementForStagger())
                 {
@@ -206,6 +211,10 @@ public class GrandmaAttackManager : MonoBehaviour, IPeeReceivable
         }
     }
 
+    /// <summary>
+    /// AttackStatusだけがStaggerでstaggerMoverは怯み状態になっていないとき，怯みの開始条件を満たす
+    /// </summary>
+    /// <returns></returns>
     private bool MeetStartingRequirementForStagger()
     {
         return grandmaStaggerMover.staggerPhase == GrandmaStaggerMover.StaggerPhase.OutOfPeriod ? true : false;

@@ -19,7 +19,7 @@ public class Water : MonoBehaviour
             .Subscribe(_ =>
             {
                 waterContentManager.UpdateWaterContent(waterCotentChangeAmount);
-                dogAudioController.PlayDrinkingAudio();
+                dogAudioController.PlayAudio(DogAudioController.AudioKinds.drinking);
 
                 //Destroy(this.gameObject); //消える際の表現
                 gameObject.SetActive(false);

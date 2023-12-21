@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -179,7 +179,7 @@ public class MapManager : MonoBehaviour
                         /* オブジェクトの位置を右記座標に指定． x座標：分割したレーンのいずれか．y座標：オブジェクトの元の座標．z座標：マップ縦方向中心 */
                         x.Value.creationObject.transform.position = new Vector3(objectsCreationPositions[randNum], x.Value.creationObject.transform.position.y, frontMapPosition.z + 0.5f);
                         x.Value.creationObject.SetActive(true);
-                        /* 子オブジェクトも有効化(以前の出現時に取得されていると非有効化されているため)　これ，WaterDropのOnDisableで実現できないか？*/ 
+                        /* 子オブジェクトも有効化(以前の出現時に取得されていると非有効化されているため)　*/ 
                         var waterDrops = x.Value.creationObject.transform.OfType<Transform>()/*.Select(z => { z.gameObject.SetActive(true); Debug.Log(z.gameObject.name); return z; })*/;
                         foreach (var waterDrop in waterDrops) waterDrop.gameObject.SetActive(true);
 
@@ -187,7 +187,6 @@ public class MapManager : MonoBehaviour
 
                     case ObjectType.Animal:
                         /* オブジェクトの位置を右記座標に指定． x座標：分割したレーン内でランダム．y座標：オブジェクトの元の座標．z座標：フラグisAnimalCreatedFrontに基づいてマップ最奥 or 最前 */
-                        /* 12/9 出現頻度の変化を実現 */
                         x.Value.creationObject.transform.position = new Vector3(UnityEngine.Random.Range(objectsCreationPositions[0], objectsCreationPositions[objectsCreationPositions.Count - 1]), x.Value.creationObject.transform.position.y, x.Value.isAnimalCreatedFront ? frontMapPosition.z : rearMapPosition.z);
                         x.Value.creationObject.transform.localEulerAngles = new Vector3(0, 180f * Convert.ToInt16(x.Value.isAnimalCreatedFront), 0); // プレイヤーの方向を向く
                         x.Value.creationObject.SetActive(true);

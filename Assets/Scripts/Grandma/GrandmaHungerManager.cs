@@ -6,7 +6,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-public class GrandmaHungerManager : MonoBehaviour, IEnemyHungerManager, IPeeReceivable
+public class GrandmaHungerManager : MonoBehaviour, IPeeReceivable
 {
     private FloatReactiveProperty hunger; // 腹減り度合い minHunger ~ maxHunger
     public IReadOnlyReactiveProperty<float> Hunger => hunger;

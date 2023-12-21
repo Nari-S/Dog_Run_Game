@@ -35,8 +35,8 @@ public class Item : MonoBehaviour
             {
                 hungerManager.UpdateHunger(changeHungerAmountDic[itemType]);
                 /* アイテム種類がダメージ系ならクゥーン，回復系ならパクッを再生 */
-                if (itemType == ItemType.Damage) dogAudioController.PlayWhineAudio();
-                else dogAudioController.PlayEatingAudio();
+                if (itemType == ItemType.Damage) dogAudioController.PlayAudio(DogAudioController.AudioKinds.whine);
+                else dogAudioController.PlayAudio(DogAudioController.AudioKinds.eating);
 
                 //Destroy(this.gameObject); //消える際の表現
                 gameObject.SetActive(false);

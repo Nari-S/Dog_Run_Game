@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -23,8 +23,8 @@ public class DogStraightMover : MonoBehaviour, IStraightMover
     {
         // Startで実行 hungerManager = GetComponent<HungerManager>();
 
-        MaxSpeed = 6f;
-        MinSpeed = 1f;
+        MaxSpeed = 10f;
+        MinSpeed = 5f;
 
         timeExecutedInPrevFrame = Time.time;
     }
@@ -43,7 +43,7 @@ public class DogStraightMover : MonoBehaviour, IStraightMover
         gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.TitleToGame).Subscribe(_ => 
         {
             dogAnimationManager.StartRunning();
-            dogAudioController.PlayBowwowAudio();
+            dogAudioController.PlayAudio(DogAudioController.AudioKinds.bowwow);
             timeExecutedInPrevFrame = Time.time;
         })
         .AddTo(this);

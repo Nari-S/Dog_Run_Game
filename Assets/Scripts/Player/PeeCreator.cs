@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +14,7 @@ public class PeeCreator : MonoBehaviour
     [SerializeField] GameObject hitBoxCube;
     private bool isAttachedPee;
 
-    [SerializeField] IWaterContentManager waterContentManager;
+    [SerializeField] WaterContentManager waterContentManager;
     private DogAudioController dogAudioController;
 
     private Subject<Pee> _OnPeeCreated;
@@ -24,9 +24,9 @@ public class PeeCreator : MonoBehaviour
 
     private void Awake()
     {
-        peeSize = new Vector3(1f, 1f, 2f);
+        peeSize = new Vector3(1.5f, 1f, 3f);
         peeDuration = 0.5f;
-        peeWaterContentConsumption = 20f;
+        peeWaterContentConsumption = 25f;
 
         /* startで実行
         if (!TryGetComponent(out waterContentManager)) Debug.Log("IWaterContentManager is not attached to the object.");
@@ -39,7 +39,7 @@ public class PeeCreator : MonoBehaviour
 
     private void Start()
     {
-        if (!TryGetComponent(out waterContentManager)) Debug.Log("IWaterContentManager is not attached to the object.");
+        if (!TryGetComponent(out waterContentManager)) Debug.Log("WaterContentManager is not attached to the object.");
         if (!(isAttachedPee = hitBoxCube.TryGetComponent<Pee>(out var _))) Debug.Log("IWaterContentManager is not attached to the object.");
 
         if (!TryGetComponent(out dogAudioController)) Debug.Log("DogAudioController is not attached to this object.");
@@ -58,7 +58,7 @@ public class PeeCreator : MonoBehaviour
         {
             if (waterContentManager.waterContent >= peeWaterContentConsumption)
             {
-                dogAudioController.PlayBowwowAudio();
+                dogAudioController.PlayAudio(DogAudioController.AudioKinds.bowwow);
 
                 waterContentManager.UpdateWaterContent(-peeWaterContentConsumption);
 

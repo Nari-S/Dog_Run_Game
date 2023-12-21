@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
@@ -104,8 +104,8 @@ public class GrandmaBallThrower : MonoBehaviour
 
     [SerializeField] private GameObject mudBall; //Editorから設定
 
-    [SerializeField] private IEnemyStraightMover grandmaStraightMover;
-    [SerializeField] private IEnemySideMover grandmaSideMover;
+    [SerializeField] private GrandmaStraightMover grandmaStraightMover;
+    [SerializeField] private GrandmaSideMover grandmaSideMover;
 
     public BallThrowParam GenerateBallThrowParam()
     {
@@ -151,8 +151,8 @@ public class GrandmaBallThrower : MonoBehaviour
         ballThrowPhase = BallThrowPhase.OutOfPeriod;
 
         /* ラッシュ前後の時間で移動量を計算するため，初期化処理 */
-        GetComponent<IEnemyStraightMover>().Reset();
-        GetComponent<IEnemySideMover>().Reset();
+        GetComponent<GrandmaStraightMover>().Reset();
+        GetComponent<GrandmaSideMover>().Reset();
     }
 
     /* 投擲準備中の移動ベクトル生成．並進移動量に減速倍率を乗算，横移動量は通常通り． */

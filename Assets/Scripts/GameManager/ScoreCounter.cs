@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,10 +45,12 @@ public class ScoreCounter : MonoBehaviour
         .AddTo(this);
 
         /* 走行スコア更新．前回のスコア更新した位置より一定距離進んだときにスコア更新． */
-        this.UpdateAsObservable().Where(_ => (int)playerTransform.position.z - prevScoreCountPosition >= countTriggerDistance).Subscribe(_ => {
-            totalScore += ((int)playerTransform.position.z - prevScoreCountPosition) * runningScorePerCountTrigger;
-            prevScoreCountPosition = (int)playerTransform.position.z;
-        }).AddTo(this);
+        this.UpdateAsObservable().Where(_ => gameStatusManager.gameStatus == GameStatusManager.GameStatus.Game || gameStatusManager.gameStatus == GameStatusManager.GameStatus.TitleToGame)
+            .Where(_ => (int)playerTransform.position.z - prevScoreCountPosition >= countTriggerDistance)
+            .Subscribe(_ => {
+                totalScore += ((int)playerTransform.position.z - prevScoreCountPosition) * runningScorePerCountTrigger;
+                prevScoreCountPosition = (int)playerTransform.position.z;
+            }).AddTo(this);
 
         /* ゲーム本編→スコア時，スコアをニフクラにアップロード．
          * その後，ニフクラより降順スコアの上位TOP5を取得して，IObservableを介して通知*/

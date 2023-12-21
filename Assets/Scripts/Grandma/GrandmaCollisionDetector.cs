@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -31,7 +31,7 @@ public class GrandmaCollisionDetector : MonoBehaviour
             .Where(x => x.TryGetComponent(out obstacleReceivable) && x.gameObject.TryGetComponent(out dogAudioController))
             .Subscribe(_ =>
             {
-                dogAudioController.PlayWhineAudio();
+                dogAudioController.PlayAudio(DogAudioController.AudioKinds.whine);
                 obstacleReceivable.NotifyGameOverEvent();
             })
             .AddTo(this);

@@ -7,7 +7,7 @@ public class BallController : MonoBehaviour
     private float speedPerSec;
     public float SpeedPerSec {
         get => speedPerSec;
-        private set => speedPerSec = Mathf.Min(10f, Mathf.Max(0, value));
+        private set => speedPerSec = value;
     }
 
     private float startBallPositionZ;
@@ -43,6 +43,6 @@ public class BallController : MonoBehaviour
 
     private bool MeetDestroyingBallRequirement()
     {
-        return transform.position.z - startBallPositionZ > 50f ? true : false;
+        return transform.position.z - startBallPositionZ > 80f ? true : false;
     }
 }

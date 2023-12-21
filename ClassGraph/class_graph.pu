@@ -1,40 +1,213 @@
 @startuml
 
-package "Common" {
-    interface IStraightMover
-    interface ISideMover
-    interface IHungerManager
+package Player {
+    package Dog {
+        interface IStraightMover
+        interface IHungerManager
+        interface IWaterContentManager
+        interface IObstacleReceivable
+        class PeeCreator
+        class HungerManager
+        class WaterContentManager
+        class ObstacleEventNotifier
+        class DogJumpMover
+        class DogAudioController
+        class DogSideMover
+        class DogStraightMover
+        class MoveManager
+        class DogAnimationManager
+    }
+
+    package Pee {
+        class Pee
+    }
+
+    package Camera {
+        class ReverseCameraManager
+        class AspectKeper
+    }
 }
 
-package "Player" {
-    interface IStraightMover
+'Player内
+PeeCreator ..> Pee
+WaterContentManager <-- PeeCreator
+IHungerManager <|.. HungerManager
+IWaterContentManager <|.. WaterContentManager
+IObstacleReceivable <|.. ObstacleEventNotifier
+DogJumpMover --> DogAudioController
+DogSideMover --> ReverseCameraManager
+IStraightMover <|.. DogStraightMover
+DogStraightMover --> HungerManager
+DogStraightMover --> DogAudioController
+DogStraightMover --> DogAnimationManager
+MoveManager --> DogStraightMover
+MoveManager --> DogSideMover 
+MoveManager --> DogJumpMover 
+PeeCreator --> DogAudioController
+
+
+package Item {
+     class Item
 }
 
-package "Enemy" {
-    class GrandmaMoveManager
-    class GrandmaAttackManager
-    class GrandmaRushMover
-    class GrandmaBallThrower
-    class GrandmaSideMover
-    class GrandmaStraightMover
-    class GrandmaAnimator
-    class GrandmaHungerManager
+'Item⇔Player
+Item ..> IHungerManager 
+Item ..> DogAudioController
+
+
+package Water {
+     class Water
 }
 
+'Water⇔Player
+Water ..> IWaterContentManager
+Water ..> DogAudioController
+
+
+package Obstacle {
+     class Obstacle
+}
+
+'Obstacle⇔Player
+Obstacle ..> IObstacleReceivable
+Obstacle ..> DogAudioController
+
+
+package Enemy {
+    package Grandma {
+        interface IPeeReceivable
+        class GrandmaMoveManager
+        class GrandmaAttackManager
+        class GrandmaRushMover
+        class GrandmaBallThrower
+        class GrandmaSideMover
+        class GrandmaStraightMover
+        class GrandmaHungerManager
+        class GrandmaStaggerMover
+        class MoveVectorRevisorInDisplay
+        class GrandmaAnimationManager
+        class GrandmaCollisionDetector
+        class GrandmaAudioController
+    }
+
+    package Ball {
+        class BallController
+        class BallHungerDamager
+    }
+}
+
+'Grandma内
 GrandmaAttackManager --> GrandmaRushMover
+GrandmaAttackManager --> GrandmaBallThrower
+GrandmaAttackManager --> GrandmaStaggerMover
 GrandmaMoveManager --> GrandmaRushMover
 GrandmaMoveManager --> GrandmaBallThrower
-GrandmaAttackManager --> GrandmaBallThrower
-IStraightMover <-- GrandmaMoveManager
-ISideMover <-- GrandmaMoveManager
-IStraightMover <|.. GrandmaStraightMover
-ISideMover <|.. GrandmaSideMover
-GrandmaRushMover --> GrandmaAnimator
-GrandmaBallThrower --> GrandmaAnimator
-IHungerManager <-- GrandmaStraightMover
-IHungerManager <|.. GrandmaHungerManager
-IStraightMover <-- GrandmaRushMover
-IStraightMover <.. GrandmaRushMover
-ISideMover <.. GrandmaRushMover
+GrandmaMoveManager --> GrandmaStaggerMover
+GrandmaStraightMover <-- GrandmaMoveManager
+GrandmaSideMover <-- GrandmaMoveManager
+GrandmaHungerManager <-- GrandmaStraightMover
+GrandmaStraightMover <-- GrandmaRushMover
+GrandmaSideMover <-- GrandmaRushMover
+GrandmaStraightMover <-- GrandmaBallThrower
+GrandmaSideMover <-- GrandmaBallThrower
+IPeeReceivable <|.. GrandmaAttackManager
+IPeeReceivable <|.. GrandmaHungerManager
+GrandmaStaggerMover --> MoveVectorRevisorInDisplay
+GrandmaStraightMover --> MoveVectorRevisorInDisplay
+GrandmaStaggerMover <-- GrandmaAnimationManager
+GrandmaRushMover <-- GrandmaAnimationManager
+GrandmaBallThrower <-- GrandmaAnimationManager
+GrandmaStaggerMover <-- GrandmaAudioController
+GrandmaRushMover <-- GrandmaAudioController
+GrandmaBallThrower <-- GrandmaAudioController
+GrandmaHungerManager <-- GrandmaRushMover
+GrandmaStraightMover <.. GrandmaStaggerMover
+GrandmaSideMover <.. GrandmaStaggerMover
+
+'Grandma⇔Grandma外
+BallController ..> BallHungerDamager
+GrandmaBallThrower ..> BallController
+GrandmaRushMover --> IStraightMover  
+Pee ..> IPeeReceivable
+DogAudioController <.. GrandmaCollisionDetector
+IHungerManager <.. BallHungerDamager 
+DogAudioController <.. BallHungerDamager
+
+
+package GameManager {
+    'class GameOverEventHandler
+    class GameStatusManager
+    class ScoreCounter
+    class ScoreRankIO
+    class BGMManager
+}
+
+'GameManager内
+ScoreCounter ..> ScoreRankIO
+GameStatusManager <-- BGMManager
+GameStatusManager <-- ScoreCounter
+'GameManager⇔GameManager外
+GameStatusManager --> IObstacleReceivable
+GameStatusManager --> IHungerManager
+ScoreCounter --> PeeCreator
+ScoreCounter ..> Pee
+GameStatusManager <-- DogJumpMover
+GameStatusManager <-- DogSideMover
+GameStatusManager <-- DogStraightMover
+GameStatusManager <-- HungerManager
+GameStatusManager <-- MoveManager
+GameStatusManager <-- PeeCreator
+GameStatusManager <-- GrandmaAttackManager
+GameStatusManager <-- GrandmaMoveManager
+GameStatusManager <-- GrandmaSideMover
+GameStatusManager <-- GrandmaStraightMover
+GameStatusManager <-- GrandmaHungerManager
+
+
+package Map {
+    class MapManager
+    class ObjectOnRoadGenerator
+}
+
+'Map内
+MapManager --> ObjectOnRoadGenerator
+'Map⇔Map外
+MapManager ..> ReverseCameraManager
+ObjectOnRoadGenerator ..> Item
+ObjectOnRoadGenerator --> GameStatusManager
+
+
+'Viewsは，Model-View-PresenterパターンのView部に該当するクラスの集合
+package GUI {
+    class GUIPresenter
+    class Views
+}
+
+'GUI内
+GUIPresenter --> Views
+'GUI⇔GUI外
+GUIPresenter --> HungerManager
+GUIPresenter --> WaterContentManager
+GUIPresenter --> ScoreCounter
+
+
+package Animal {
+    class AnimalAnimationController
+    class AnimalAudioController
+    class AnimalCollisionDetector
+    class AnimalDisposer
+    class AnimalMover
+}
+
+'Animal内
+AnimalAnimationController --> AnimalCollisionDetector
+AnimalAudioController --> AnimalCollisionDetector
+AnimalDisposer --> AnimalCollisionDetector
+AnimalMover --> AnimalCollisionDetector
+'Animal⇔Animal外
+AnimalCollisionDetector ..> IObstacleReceivable
+AnimalCollisionDetector ..> DogAudioController
+AnimalDisposer --> ReverseCameraManager
+Pee ..> AnimalCollisionDetector
 
 @enduml

@@ -7,6 +7,7 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameStatusManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class GameStatusManager : MonoBehaviour
 
     [SerializeField] GameObject player;
     private IObstacleReceivable obstacleReceivable;
+    private IHungerManager hungerManager;
 
     public int transitionDurationTitleToGame; // タイトル→ゲーム本編からゲーム本編への遷移までにかかる時間(ms)
     public int transitionDurationGameToScore; // ゲーム本編からゲーム本編→スコア画面への遷移までにかかる時間(ms)
@@ -48,9 +50,13 @@ public class GameStatusManager : MonoBehaviour
     private void Start()
     {
         if (!player.TryGetComponent(out obstacleReceivable)) Debug.Log("IObstacleReceivable is not attached to player");
+        if (!player.TryGetComponent(out hungerManager)) Debug.Log("IHungerManager is not attached to player");
 
         /* 柴犬オブジェクトよりゲームオーバ通知を受け取ったとき，ゲーム本編からゲーム本編→スコア画面に遷移 */
         obstacleReceivable.OnGameOverd.Where(_ => gameStatus == GameStatus.Game).Subscribe(_ =>gameStatus = GameStatus.GameToScore).AddTo(this);
+
+        /* 柴犬の腹減り度が0になったときはゲームオーバとし，ゲーム本編からゲーム本編→スコア画面に遷移 */
+        hungerManager.Hunger.Where(x => x <= hungerManager.MinHunger).Subscribe(_ => gameStatus = GameStatus.GameToScore).AddTo(this);
 
         /* ゲームステータスがGameToScoreになった後，m秒待ってスコア画面に遷移 */
         this.UpdateAsObservable().Where(_ => gameStatus == GameStatus.GameToScore).Subscribe(async _ =>
@@ -73,8 +79,15 @@ public class GameStatusManager : MonoBehaviour
         gameStatus = GameStatus.TitleToGame;
     }
 
-    private void Update()
+    /// <summary>
+    /// スコア画面でタップを検出した際，シーンをリロードする
+    /// </summary>
+    /// <param name="context"></param>
+    public void ReloadGame(InputAction.CallbackContext context)
     {
-        Debug.Log(gameStatus);
+        if (!context.started) return;
+        if (gameStatus != GameStatus.Score) return;
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

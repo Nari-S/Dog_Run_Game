@@ -1,9 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-public class GrandmaSideMover : MonoBehaviour, IEnemySideMover
+public class GrandmaSideMover : MonoBehaviour
 {
     [SerializeField] private Transform dogTransform;
 
