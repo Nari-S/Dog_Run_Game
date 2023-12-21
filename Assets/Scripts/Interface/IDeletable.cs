@@ -1,0 +1,4 @@
+﻿interface IDeletable
+{
+    void DeleteObject();
+}

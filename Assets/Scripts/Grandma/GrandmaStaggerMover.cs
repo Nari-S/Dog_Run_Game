@@ -68,8 +68,8 @@ public class GrandmaStaggerMover : MonoBehaviour
         await Task.Delay(ConvertNormalizedDistanceToStaggerDuration(normalizedInversionDistancePeeToPlayer), token);
 
         /* ラッシュ前後の時間で移動量を計算するため，初期化処理 */
-        GetComponent<IEnemyStraightMover>().Reset();
-        GetComponent<IEnemySideMover>().Reset();
+        GetComponent<GrandmaStraightMover>().Reset();
+        GetComponent<GrandmaSideMover>().Reset();
 
         Reset();
     }

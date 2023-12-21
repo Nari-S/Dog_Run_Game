@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10f6f9417d29eee42ab24b229eb9dcf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  peeParticle: {fileID: 1822721288654054671, guid: 80fa202ce9ada1c47b329d03527c5047,
+  peeParticle: {fileID: 6250412132588713333, guid: ec3bb7108ebd44546ba036d0d6440ebd,
     type: 3}
 --- !u!114 &2625341038012742258
 MonoBehaviour:

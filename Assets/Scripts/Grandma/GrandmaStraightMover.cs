@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-public class GrandmaStraightMover : MonoBehaviour, IEnemyStraightMover
+public class GrandmaStraightMover : MonoBehaviour
 {
     public float StraightMoveSpeed { get; set; }
 
@@ -11,7 +11,7 @@ public class GrandmaStraightMover : MonoBehaviour, IEnemyStraightMover
     public float MinSpeed { get; private set; } // 移動の最低速度
     private float dashSpeedAdjustmentNum; // 腹減り度から移動速度に変換するために用いる値
 
-    private IEnemyHungerManager hungerManager;
+    private GrandmaHungerManager hungerManager;
     private MoveVectorRevisorIntoDisplay moveVectorRevisor;
 
     private float timeExecutedInPrevFrame;
@@ -20,14 +20,8 @@ public class GrandmaStraightMover : MonoBehaviour, IEnemyStraightMover
 
     private void Awake()
     {
-        //hungerManager = GetComponent<IEnemyHungerManager>();
-        /* Startで実施
-        if (!TryGetComponent(out hungerManager)) Debug.Log("IEnemyHungerManager is not attached");
-        if (!TryGetComponent(out moveVectorRevisor)) Debug.Log("MoveVectorRevisorIntoDisplay is not attached");
-        */
-
-        MaxSpeed = 6f;
-        MinSpeed = 1f;
+        MaxSpeed = 12f;
+        MinSpeed = 5f;
 
         timeExecutedInPrevFrame = Time.time;
     }

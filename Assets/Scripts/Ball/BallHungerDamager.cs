@@ -25,7 +25,7 @@ public class BallHungerDamager : MonoBehaviour
             .Subscribe(_ => 
             {
                 playerHungerManager.UpdateHunger(-damage);
-                dogAudioController.PlayWhineAudio();
+                dogAudioController.PlayAudio(DogAudioController.AudioKinds.whine);
 
                 MudBallExplosionParticlePlay();
 

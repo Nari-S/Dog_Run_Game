@@ -1,10 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 
-public class DogJumpMover : MonoBehaviour, IJumpMover
+public class DogJumpMover : MonoBehaviour
 {
     public bool IsAscending { get; set; }
     public bool IsDescending { get; set; }
@@ -59,7 +59,6 @@ public class DogJumpMover : MonoBehaviour, IJumpMover
     {
         if (!context.performed) return;
         if (IsAscending || IsDescending) return;
-        if (stepMover.IsStepping) return;
         if (gameStatusManager.gameStatus != GameStatusManager.GameStatus.Game) return;
 
         IsAscending = true;
@@ -83,7 +82,7 @@ public class DogJumpMover : MonoBehaviour, IJumpMover
         .OnStart(() =>
         {
             dogAnimationManager.StartAscending();
-            dogAudioController.PlayBowwowAudio();
+            dogAudioController.PlayAudio(DogAudioController.AudioKinds.bowwow);
         }
         )
         .OnComplete(() =>

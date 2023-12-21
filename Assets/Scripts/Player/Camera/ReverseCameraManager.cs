@@ -21,7 +21,9 @@ public class ReverseCameraManager : MonoBehaviour
 
     [SerializeField] private bool ReverseFlag_Debug;
 
-    [SerializeField] public bool IsFacingFlont { get; private set; }
+    private ReactiveProperty<bool> _isFacingFlont;
+    public IReadOnlyReactiveProperty<bool> OnFacingFlont => _isFacingFlont;
+    [SerializeField] public bool IsFacingFlont { get => _isFacingFlont.Value; private set => _isFacingFlont.Value = value; }
 
     /* カメラ端の座標 */
     public float MaxFurthestPointInViewFront { get; private set; }
@@ -48,7 +50,7 @@ public class ReverseCameraManager : MonoBehaviour
         MaxFurthestPointInViewFront = flontCameraPosition.y / Mathf.Tan((flontCameraRotation.x - camera.fieldOfView / 2f) * Mathf.Deg2Rad) + flontCameraPosition.z + standardPointObject.transform.position.z;
         MaxFurthestPointInViewRear = - reverseCameraPosition.y / Mathf.Tan((reverseCameraRotation.x - camera.fieldOfView / 2f) * Mathf.Deg2Rad) + reverseCameraPosition.z + standardPointObject.transform.position.z;
 
-        IsFacingFlont = true;
+        _isFacingFlont = new ReactiveProperty<bool>(true);
     }
 
     private void Start()

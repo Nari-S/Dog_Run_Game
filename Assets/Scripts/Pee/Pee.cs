@@ -28,6 +28,7 @@ public class Pee : MonoBehaviour
 
         _OnPeeHit = new Subject<float>();
 
+        /* ションベンが別オブジェクトに当たった際，相手のコンポーネントがIPeeReceivableを実装していれば，ションベンと衝突オブジェクト間の距離を引数にIPeeReceivable.AffectPee()（ダメージを与える処理）を呼ぶ */
         this.OnTriggerEnterAsObservable()
             .Where(x => {
                 peeReceivables = x.GetComponents<IPeeReceivable>();
@@ -40,6 +41,7 @@ public class Pee : MonoBehaviour
 
                 _OnPeeHit.OnNext(normalizedInversionDistanceToEnemy); // ションベンオブジェクトの衝突イベントを，敵までの距離を正規化・反転した値と共に通知
 
+                /* IpeeReceivableを実装した全てのクラスのAffectPee()メソッドを呼ぶ */
                 foreach(var peeReceivable in peeReceivables)
                 {
                     peeReceivable.AffectPee(normalizedInversionDistanceToEnemy);
@@ -47,9 +49,12 @@ public class Pee : MonoBehaviour
             })
             .AddTo(this);
 
-        PeeParticlePlay();
+        /* ションベンが別オブジェクトに当たった際，相手のコンポーネントのいずれかがIDeletableを実装していれば，IDeletable.DeleteObject()（削除する処理）を呼ぶ */
+        this.OnTriggerEnterAsObservable().Select(x => x.GetComponent<IDeletable>()).Where(x => x != null).Subscribe(x => x.DeleteObject()).AddTo(this);
 
-        Destroy(this.gameObject, peeDuration);
+        PeeParticlePlay(); // パーティクルシステムでションベンエフェクト再生
+
+        Destroy(this.gameObject, peeDuration); // ションベンオブジェクトは一定時間後に消える
     }
 
     /// <summary>
@@ -70,7 +75,7 @@ public class Pee : MonoBehaviour
         ParticleSystem particle = Instantiate(peeParticle);
         particle.transform.position = TryGetComponent<CapsuleCollider>(out var playerCapsuleCollider) ?
             transform.position - new Vector3(0f, 0f, playerCapsuleCollider.height / 2) :
-            transform.position;
+            transform.position + new Vector3(0f, 0f, transform.localScale.z / 2);
 
         particle.Play();
     }

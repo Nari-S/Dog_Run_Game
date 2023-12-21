@@ -9,8 +9,6 @@ public class DogAnimationManager : MonoBehaviour
     private void Awake()
     {
         dogAnimator = GetComponent<Animator>();
-
-        // 別クラスに移動　dogAnimator.SetBool("isRunning", true); //現状，ゲーム開始直後にダッシュスタート
     }
 
     public void StartRunning()

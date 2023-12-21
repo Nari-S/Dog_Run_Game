@@ -24,15 +24,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "StepMove",
-                    "type": "Value",
-                    "id": "ef404c00-2c92-4129-a4a4-bd815c2322ee",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "RightFlick,LeftFlick",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Pee",
                     "type": "Value",
                     "id": "18a1c00f-9ab8-482e-8ac1-21da12562f75",
@@ -54,6 +45,15 @@
                     "name": "ChangeGameStatusTitleToGame",
                     "type": "Value",
                     "id": "c7828a9f-c96c-478f-90f3-de22a7e35fd7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ReloadGame",
+                    "type": "Value",
+                    "id": "c8402685-903b-4cff-ad83-0184eb5ab118",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "Tap",
@@ -80,17 +80,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "SideMove",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "4ab71c18-e16b-43d3-9432-1cffb66b5717",
-                    "path": "<Touchscreen>/primaryTouch",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "StepMove",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -124,6 +113,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "ChangeGameStatusTitleToGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8bf9096-c4ef-4224-b20f-dc6e7a4e7fd4",
+                    "path": "<Touchscreen>/primaryTouch",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ReloadGame",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

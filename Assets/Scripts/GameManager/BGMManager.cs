@@ -36,13 +36,21 @@ public class BGMManager : MonoBehaviour
         gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.GameToScore).Subscribe(_ => StopAudio(audioSource, gameStatusManager.transitionDurationGameToScore / 1000 - 0.1f)).AddTo(this);
 
         /* スコア時，失敗BGM再生 */
-        gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.Score).Subscribe(_ => PlayAudio(audioSource, endingSound, soundVolume)).AddTo(this);
+        gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.Score).Subscribe(_ => PlayAudio(audioSource, endingSound, soundVolume, false)).AddTo(this);
     }
 
-    private void PlayAudio(AudioSource audioSource, AudioClip audioClip, float volume)
+    /// <summary>
+    /// AudioSourceを再生
+    /// </summary>
+    /// <param name="audioSource">再生対象のAudioSource</param>
+    /// <param name="audioClip">再生する音楽</param>
+    /// <param name="volume">再生する音のボリューム</param>
+    /// <param name="isLooping">音楽をループするか，省略時はループし続ける設定</param>
+    private void PlayAudio(AudioSource audioSource, AudioClip audioClip, float volume, bool isLooping = true)
     {
         audioSource.clip = audioClip;
         audioSource.volume = volume;
+        audioSource.loop = isLooping;
         audioSource.Play();
     }
 

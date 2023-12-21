@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -28,9 +28,9 @@ public class GrandmaRushMover : MonoBehaviour
 
     private IStraightMover playerStraightMover;
 
-    [SerializeField] private IEnemyStraightMover grandmaStraightMover;
-    [SerializeField] private IEnemySideMover grandmaSideMover;
-    [SerializeField] private IEnemyHungerManager grandmaHungerManager;
+    [SerializeField] private GrandmaStraightMover grandmaStraightMover;
+    [SerializeField] private GrandmaSideMover grandmaSideMover;
+    [SerializeField] private GrandmaHungerManager grandmaHungerManager;
 
     //public RushPhase rushPhase { get; private set; }
     private ReactiveProperty<RushPhase> _rushPhase;
@@ -55,9 +55,9 @@ public class GrandmaRushMover : MonoBehaviour
 
         playerStraightMover = player.GetComponent<IStraightMover>();
 
-        grandmaStraightMover = GetComponent<IEnemyStraightMover>();
-        grandmaSideMover = GetComponent<IEnemySideMover>();
-        grandmaHungerManager = GetComponent<IEnemyHungerManager>();
+        grandmaStraightMover = GetComponent<GrandmaStraightMover>();
+        grandmaSideMover = GetComponent<GrandmaSideMover>();
+        grandmaHungerManager = GetComponent<GrandmaHungerManager>();
 
         /* rushPhaseごとに呼び出すメソッドを設定 */
         moveActionDic = new Dictionary<RushPhase, Action>();
@@ -165,8 +165,8 @@ public class GrandmaRushMover : MonoBehaviour
             StartDescendingJump();*/
 
             /* ラッシュ前後の時間で移動量を計算するため，初期化処理 */
-            GetComponent<IEnemyStraightMover>().Reset();
-            GetComponent<IEnemySideMover>().Reset();
+            GetComponent<GrandmaStraightMover>().Reset();
+            GetComponent<GrandmaSideMover>().Reset();
 
             /* ラッシュ終了後は，coolDownDurationの間，クールダウン状態 */
             rushPhase = RushPhase.Cooldown;

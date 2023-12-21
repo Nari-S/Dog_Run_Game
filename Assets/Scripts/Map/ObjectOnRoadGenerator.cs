@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -90,7 +90,7 @@ public class ObjectOnRoadGenerator : MonoBehaviour
 
         /* オブジェクトごとの生成頻度決定 */
         nowAppearanceFrequencys = new Dictionary<ObjectType, int>() {
-            { ObjectType.HealingItem, 5 }, { ObjectType.DamageItem, 5}, { ObjectType.WaterDrop, 5 }, { ObjectType.Obstacle, 8 }, { ObjectType.Animal, 8 }
+            { ObjectType.HealingItem, 5 }, { ObjectType.DamageItem, 5}, { ObjectType.WaterDrop, 12 }, { ObjectType.Obstacle, 8 }, { ObjectType.Animal, 11 }
         };
 
         appearanceFreqsChangeFreq = 20f; // オブジェクト生成頻度の更新間隔
@@ -99,9 +99,9 @@ public class ObjectOnRoadGenerator : MonoBehaviour
         {
             { ObjectType.HealingItem, new List<int>() { 5 } },
             { ObjectType.DamageItem, new List<int>() { 5 } },
-            { ObjectType.WaterDrop, new List<int>() { 5 } },
+            { ObjectType.WaterDrop, new List<int>() { 12 } },
             { ObjectType.Obstacle, new List<int>() { 8, 7, 6, 5, 4, 3, 2 } },
-            { ObjectType.Animal, new List<int>() { 8, 7, 6, 5, 4, 3, 2 } }
+            { ObjectType.Animal, new List<int>() { 11, 10, 9, 8, 7, 6, 5 } }
         };
 
         gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.Game).Subscribe(_ =>
@@ -133,7 +133,7 @@ public class ObjectOnRoadGenerator : MonoBehaviour
         //Dictionary<ObjectType, ObjectCreationInfo> objectCreationInfosLocal = objectCreationInfos;
         ObjectCreationInfo tempObjectCreationInfo;
 
-
+        /* 引数のobjectCreationInfos内のObjectCreationInfoが更新タイミングだった際，次回の生成マップ番号，次回の生成マップ番号の更新タイミング，オブジェクトの選択を行い，objectCreationInfosに反映 */
         foreach (var objectCreationInfoKey in objectCreationInfos.Keys.ToList())
         {
             tempObjectCreationInfo = objectCreationInfos[objectCreationInfoKey];

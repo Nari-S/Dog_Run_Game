@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using UniRx;
 
 
-public class DogSideMover : MonoBehaviour, ISideMover
+public class DogSideMover : MonoBehaviour
 {
     /* InputSystem?????CSensor/Accelerometer???????n????????????????????
        Code????Action?L?q */
@@ -57,21 +57,10 @@ public class DogSideMover : MonoBehaviour, ISideMover
 
         /* ゲーム本編に遷移した際の時間を，前フレームに横移動が実行された時間にする */
         gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.TitleToGame || gameStatusManager.gameStatus == GameStatusManager.GameStatus.Game).Subscribe(_ => timeExecutedInPrevFrame = Time.time).AddTo(this);
+
+        /* カメラが後ろ向きから前向きに切り替えた際，横移動は前フレームに実行されたとする．これで，前向きになった際に横方向の瞬間移動を防ぐ． */
+        reverseCameraManager.OnFacingFlont.Where(x => x).Subscribe(_ => timeExecutedInPrevFrame = Time.time).AddTo(this);
     }
-
-    /* Startで実行
-     * private void OnEnable()
-    {
-        sideMoveAction.performed += GetAccelerometer;
-        sideMoveAction?.Enable();
-
-        mapWidth = 3f;
-
-        maxPhoneInclination = 0.5f;
-
-        //minMoveDistance = 0.01f;
-        maxSideMoveDistancePerSec = 30f;
-    }*/
 
     private void OnDisable()
     {
@@ -81,16 +70,17 @@ public class DogSideMover : MonoBehaviour, ISideMover
 
     public Vector3 GetSideMoveVector()
     {
-        if (stepMover.IsStepping) return Vector3.zero; //?X?e?b?v??????????????????
-        if (calculatedAccelerometer == accelerometer) return Vector3.zero;
-        if (gameStatusManager.gameStatus != GameStatusManager.GameStatus.Game) return Vector3.zero;
+        if (calculatedAccelerometer == accelerometer) return Vector3.zero; // 加速度センサ値が更新された後の移動処理は，次回のセンサ値更新まで1回のみ受け付ける
+        if (!reverseCameraManager.IsFacingFlont) return Vector3.zero; // 後ろを向いているときは横移動しない
+        if (gameStatusManager.gameStatus != GameStatusManager.GameStatus.Game) return Vector3.zero; // ゲーム本編でのみ横移動する
 
         calculatedAccelerometer = accelerometer;
 
-        /* ?????????@???????????x?Z???T?l???????? */
+        /* 最新の加速度センサ値をキューに追加し，最も古い値をデキューする */
         accelerometerXQueue.Enqueue(accelerometer.x);
         if (accelerometerXQueue.Count > queueSize) accelerometerXQueue.Dequeue();
 
+        /* キュー内のセンサ値の平均値を求める（センサ値の平滑化） */
         var accelerometerXSum = 0f;
         foreach (var item in accelerometerXQueue)
             accelerometerXSum += item;
@@ -100,6 +90,7 @@ public class DogSideMover : MonoBehaviour, ISideMover
         var clampedAccelerometerX = Mathf.Clamp(lowPassAccelemterX, -maxPhoneInclination, maxPhoneInclination);
         var destinationX = Map(clampedAccelerometerX, -maxPhoneInclination, maxPhoneInclination, -mapWidth / 2, mapWidth / 2);
 
+        /* 前回，横移動ベクトルを生成した際の時間から現フレームの時間を引く．下記の移動距離の算出の際に使用 */
         var nowTime = Time.time;
         var deltaTimeFromPrevFrame = nowTime - timeExecutedInPrevFrame;
         timeExecutedInPrevFrame = nowTime;
@@ -111,19 +102,18 @@ public class DogSideMover : MonoBehaviour, ISideMover
 
     public void GetAccelerometer(InputAction.CallbackContext context)
     {
-        if(reverseCameraManager.IsFacingFlont) accelerometer = context.ReadValue<Vector3>();
-        else accelerometer = -context.ReadValue<Vector3>();
+        accelerometer = context.ReadValue<Vector3>();
     }
 
     /// <summary>
-    /// ?n?????????l????????????????????????????
+    /// 渡された数値をある範囲から別の範囲に変換
     /// </summary>
-    /// <param name="value">?????????????l</param>
-    /// <param name="start1">????????????????</param>
-    /// <param name="stop1">????????????????</param>
-    /// <param name="start2">??????????????????</param>
-    /// <param name="stop2">??????????????????</param>
-    /// <returns>?????????l</returns>
+    /// <param name="value">変換する入力値</param>
+    /// <param name="start1">現在の範囲の下限</param>
+    /// <param name="stop1">現在の範囲の上限</param>
+    /// <param name="start2">変換する範囲の下限</param>
+    /// <param name="stop2">変換する範囲の上限</param>
+    /// <returns>変換後の値</returns>
     private float Map(float value, float start1, float stop1, float start2, float stop2)
     {
         return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
