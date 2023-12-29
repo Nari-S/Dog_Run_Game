@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UniRx;
+using UniRx.Triggers;
 
 
 public class DogSideMover : MonoBehaviour
 {
-    /* InputSystem?????CSensor/Accelerometer???????n????????????????????
-       Code????Action?L?q */
-    [SerializeField] private InputAction sideMoveAction;
     [SerializeField] private ReverseCameraManager reverseCameraManager;
 
     [SerializeField] private float mapWidth;
@@ -19,8 +17,6 @@ public class DogSideMover : MonoBehaviour
 
     private Vector3 accelerometer;
     private Vector3 calculatedAccelerometer;
-
-    private IStepMover stepMover;
 
     private Queue<float> accelerometerXQueue;
     private int queueSize;
@@ -34,8 +30,6 @@ public class DogSideMover : MonoBehaviour
         accelerometer = Vector3.zero;
         calculatedAccelerometer = Vector3.zero;
 
-        // startで実行　stepMover = GetComponent<IStepMover>();
-
         accelerometerXQueue = new Queue<float>();
         queueSize = 5;
 
@@ -44,11 +38,6 @@ public class DogSideMover : MonoBehaviour
 
     private void Start()
     {
-        stepMover = GetComponent<IStepMover>();
-
-        sideMoveAction.performed += GetAccelerometer;
-        sideMoveAction?.Enable();
-
         mapWidth = 3f;
 
         maxPhoneInclination = 0.5f;
@@ -58,14 +47,11 @@ public class DogSideMover : MonoBehaviour
         /* ゲーム本編に遷移した際の時間を，前フレームに横移動が実行された時間にする */
         gameStatusManager.OnGameStatusChanged.Where(x => x == GameStatusManager.GameStatus.TitleToGame || gameStatusManager.gameStatus == GameStatusManager.GameStatus.Game).Subscribe(_ => timeExecutedInPrevFrame = Time.time).AddTo(this);
 
+        /* ゲーム本編のみ，加速度を取得する */
+        this.UpdateAsObservable().Where(_ => gameStatusManager.gameStatus == GameStatusManager.GameStatus.Game).Subscribe(_ => GetAccelerometer()).AddTo(this);
+
         /* カメラが後ろ向きから前向きに切り替えた際，横移動は前フレームに実行されたとする．これで，前向きになった際に横方向の瞬間移動を防ぐ． */
         reverseCameraManager.OnFacingFlont.Where(x => x).Subscribe(_ => timeExecutedInPrevFrame = Time.time).AddTo(this);
-    }
-
-    private void OnDisable()
-    {
-        sideMoveAction.performed -= GetAccelerometer;
-        sideMoveAction?.Disable();
     }
 
     public Vector3 GetSideMoveVector()
@@ -100,9 +86,9 @@ public class DogSideMover : MonoBehaviour
 
     }
 
-    public void GetAccelerometer(InputAction.CallbackContext context)
+    public void GetAccelerometer()
     {
-        accelerometer = context.ReadValue<Vector3>();
+        accelerometer = Input.acceleration;
     }
 
     /// <summary>
