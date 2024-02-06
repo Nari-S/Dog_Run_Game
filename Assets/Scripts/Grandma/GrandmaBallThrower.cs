@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 /* 投擲攻撃の呼び出しに必要な構造体 */
 public class BallThrowParam
@@ -184,7 +185,7 @@ public class GrandmaBallThrower : MonoBehaviour
     /// <param name="ballThrowingDuration">投擲の時間</param>
     /// <param name="token">CancelationToken</param>
     //public async Task StartBallThrowing(float ballSize, float ballSpeedPerSec, int ballThrowingPreparationDuration, int ballThrowingDuration, CancellationToken token)
-    public async Task StartBallThrowing(BallThrowParam ballThrowParam, CancellationToken token)
+    public async UniTask StartBallThrowing(BallThrowParam ballThrowParam, CancellationToken token)
     {
         if (ballThrowPhase != BallThrowPhase.OutOfPeriod) return;
 
@@ -197,15 +198,16 @@ public class GrandmaBallThrower : MonoBehaviour
     }
 
     /* 投擲準備中の開始から終了のステータス制御 */
-    private async Task ThrowBallPreparation(int ballThrowingPreparationDuration, CancellationToken token)
+    private async UniTask ThrowBallPreparation(int ballThrowingPreparationDuration, CancellationToken token)
     {
         ballThrowPhase = BallThrowPhase.Preparation;
 
-        await Task.Delay(ballThrowingPreparationDuration, token);
+        //await Task.Delay(ballThrowingPreparationDuration, token);
+        await UniTask.Delay(ballThrowingPreparationDuration, cancellationToken: token);
     }
 
     /* 投擲中の開始から終了のステータス制御 */
-    private async Task ThrowBall(float ballSize, float ballSpeedPerSec, int ballThrowingDuration, CancellationToken token)
+    private async UniTask ThrowBall(float ballSize, float ballSpeedPerSec, int ballThrowingDuration, CancellationToken token)
     {
         if (ballThrowPhase != BallThrowPhase.Preparation) return;
 
@@ -216,7 +218,8 @@ public class GrandmaBallThrower : MonoBehaviour
         CreateBall(ballSize, ballSpeedPerSec);
 
         /* ballThrowingDuration秒後，通常移動へ遷移 */
-        await Task.Delay(ballThrowingDuration, token);
+        //await Task.Delay(ballThrowingDuration, token);
+        await UniTask.Delay(ballThrowingDuration, cancellationToken: token);
 
         Reset();
     }

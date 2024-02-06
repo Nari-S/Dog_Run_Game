@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Cysharp.Threading.Tasks;
 
 public class AnimalDisposer : MonoBehaviour
 {
@@ -33,7 +34,8 @@ public class AnimalDisposer : MonoBehaviour
         deleteTriggeredEventSubscriber = animalCollisionDetector.OnDeleted.Subscribe(async _ =>
         {
             deleteTriggeredPositionSubscriber?.Dispose(); // カメラ外へ出た際に消去する購読を終了
-            await Task.Delay(durationFromEventToDelete); // durationFromEventToDelete後にオブジェクト非有効化
+            //await Task.Delay(durationFromEventToDelete); // durationFromEventToDelete後にオブジェクト非有効化
+            await UniTask.Delay(durationFromEventToDelete); // durationFromEventToDelete後にオブジェクト非有効化
             gameObject.SetActive(false);
         });
     }

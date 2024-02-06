@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Threading;
 using System.Threading.Tasks;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 public class GrandmaStaggerMover : MonoBehaviour
 {
@@ -50,22 +51,24 @@ public class GrandmaStaggerMover : MonoBehaviour
     }
 
 
-    public async Task StartStagger(int staggerDuration, CancellationToken token)
+    public async UniTask StartStagger(int staggerDuration, CancellationToken token)
     {
         if (staggerPhase != StaggerPhase.OutOfPeriod) return;
         staggerPhase = StaggerPhase.Stagger;
 
-        await Task.Delay(staggerDuration, token); 
+        //await Task.Delay(staggerDuration, token); 
+        await UniTask.Delay(staggerDuration, cancellationToken: token);
 
         Reset();
     }
 
-    public async Task StartStagger(float normalizedInversionDistancePeeToPlayer, CancellationToken token)
+    public async UniTask StartStagger(float normalizedInversionDistancePeeToPlayer, CancellationToken token)
     {
         if (staggerPhase != StaggerPhase.OutOfPeriod) return;
         staggerPhase = StaggerPhase.Stagger;
 
-        await Task.Delay(ConvertNormalizedDistanceToStaggerDuration(normalizedInversionDistancePeeToPlayer), token);
+        //await Task.Delay(ConvertNormalizedDistanceToStaggerDuration(normalizedInversionDistancePeeToPlayer), token);
+        await UniTask.Delay(ConvertNormalizedDistanceToStaggerDuration(normalizedInversionDistancePeeToPlayer), cancellationToken: token);
 
         /* ラッシュ前後の時間で移動量を計算するため，初期化処理 */
         GetComponent<GrandmaStraightMover>().Reset();
