@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UniRx;
 using UniRx.Triggers;
-
+using System;
 
 public class DogSideMover : MonoBehaviour
 {
@@ -54,7 +54,28 @@ public class DogSideMover : MonoBehaviour
         reverseCameraManager.OnFacingFlont.Where(x => x).Subscribe(_ => timeExecutedInPrevFrame = Time.time).AddTo(this);
     }
 
+    /// <summary>
+    /// 柴犬の横方向移動量を生成する
+    /// </summary>
+    /// <returns></returns>
     public Vector3 GetSideMoveVector()
+    {
+        var moveVector = GetAccelerometerMoveVector(); // 加速度センサによる横方向移動量の生成
+
+        moveVector += GetKeyMoveVector(); // キーボード入力による横方向移動量の生成
+
+        return moveVector;
+    }
+
+    private Vector3 GetKeyMoveVector()
+    {
+        /* 現座標に矢印キーの移動量をし、マップ外にはみ出る場合はマップ内座標へ補正する */
+        var destinationX = Mathf.Clamp((float)(transform.position.x - Convert.ToInt32(Input.GetKey(KeyCode.LeftArrow)) * 0.05 + Convert.ToInt32(Input.GetKey(KeyCode.RightArrow)) * 0.05), -mapWidth / 2, mapWidth / 2);
+
+        return new Vector3(destinationX - transform.position.x, 0, 0);
+    }
+
+    private Vector3 GetAccelerometerMoveVector()
     {
         if (calculatedAccelerometer == accelerometer) return Vector3.zero; // 加速度センサ値が更新された後の移動処理は，次回のセンサ値更新まで1回のみ受け付ける
         if (!reverseCameraManager.IsFacingFlont) return Vector3.zero; // 後ろを向いているときは横移動しない
@@ -83,7 +104,6 @@ public class DogSideMover : MonoBehaviour
 
         if (destinationX - transform.position.x > 0) return new Vector3(Mathf.Clamp(destinationX - transform.position.x, 0, maxSideMoveDistancePerSec * deltaTimeFromPrevFrame), 0, 0);
         else return new Vector3(Mathf.Clamp(destinationX - transform.position.x, -maxSideMoveDistancePerSec * deltaTimeFromPrevFrame, 0f), 0, 0);
-
     }
 
     public void GetAccelerometer()

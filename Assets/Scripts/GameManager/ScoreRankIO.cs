@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
 using NCMB;
 using NCMB.Tasks;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 
 public class ScoreRankIO : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class ScoreRankIO : MonoBehaviour
     /// </summary>
     /// <param name="n"></param>
     /// <returns></returns>
-    public async Task<List<int>> DownloadTopScore(int n)
+    public async UniTask /*Task*/ <List<int>> DownloadTopScore(int n)
     {
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(dataStoreName);
         query.OrderByDescending(scoreFieldName); // スコアを格納するフィールドで降順ソート

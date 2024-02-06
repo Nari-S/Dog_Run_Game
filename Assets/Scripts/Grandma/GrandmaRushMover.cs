@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 public class GrandmaRushMover : MonoBehaviour
 {
@@ -110,7 +111,7 @@ public class GrandmaRushMover : MonoBehaviour
         moveVector.z *= cooldownMoveMagnification;
     }
 
-    public async Task StartRushing(CancellationToken token)
+    public async UniTask StartRushing(CancellationToken token)
     {
         if (rushPhase != RushPhase.OutOfRange) return;
 
@@ -119,18 +120,19 @@ public class GrandmaRushMover : MonoBehaviour
         await Rushing(token);
     }
 
-    private async Task RushPreparation(CancellationToken token)
+    private async UniTask RushPreparation(CancellationToken token)
     {
         rushPhase = RushPhase.Preparation;
 
         /* rushPreparationDuration秒後，ラッシュ開始 */
-        await Task.Delay(rushPreparationDuration, token);
+        //await Task.Delay(rushPreparationDuration, token);
+        await UniTask.Delay(rushPreparationDuration, cancellationToken: token);
 
         rushPhase = RushPhase.Rushing;
     }
 
     /* 突進開始．突進チャージ時間終了後に呼ぶ． */
-    private async Task Rushing(CancellationToken token) 
+    private async UniTask Rushing(CancellationToken token) 
     {
         if (rushPhase != RushPhase.Rushing) return;
 
@@ -174,7 +176,8 @@ public class GrandmaRushMover : MonoBehaviour
 
             try
             {
-                await Task.Delay(coolDownDuration, token);
+                //await Task.Delay(coolDownDuration, token);
+                await UniTask.Delay(coolDownDuration, cancellationToken: token);
             }
             catch (Exception ex) when (ex is OperationCanceledException)
             {

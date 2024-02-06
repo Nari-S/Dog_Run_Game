@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 public class GrandmaAnimationManager : MonoBehaviour
 {
@@ -62,7 +63,7 @@ public class GrandmaAnimationManager : MonoBehaviour
 
         ballThrowActions = new Dictionary<GrandmaBallThrower.BallThrowPhase, Action>() {
             { GrandmaBallThrower.BallThrowPhase.OutOfPeriod,    () => { ; } },
-            { GrandmaBallThrower.BallThrowPhase.Preparation,    async () => { animator.SetFloat("BallThrowingSpeed", 1.0f); animator.SetTrigger("BallThrowingTrigger"); await Task.Delay(300); animator.SetFloat("BallThrowingSpeed", 0f); } },
+            { GrandmaBallThrower.BallThrowPhase.Preparation,    async () => { animator.SetFloat("BallThrowingSpeed", 1.0f); animator.SetTrigger("BallThrowingTrigger"); /*await Task.Delay(300);*/ await UniTask.Delay(300); animator.SetFloat("BallThrowingSpeed", 0f); } },
             { GrandmaBallThrower.BallThrowPhase.Throwing,       () => { animator.SetFloat("BallThrowingSpeed", 1.0f); } }
         };
 

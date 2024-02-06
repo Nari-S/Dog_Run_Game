@@ -77,7 +77,5 @@ public class GrandmaHungerManager : MonoBehaviour, IPeeReceivable
         if ((hunger.Value + changeAmount) < MinHunger) hunger.Value = MinHunger;
         else if ((hunger.Value + changeAmount) > MaxHunger) hunger.Value = MaxHunger;
         else hunger.Value += changeAmount;
-
-        Debug.Log("grandmaHungerChangeAmount: " + changeAmount + ", afterChangedHunger: " + hunger.Value);
     }
 }

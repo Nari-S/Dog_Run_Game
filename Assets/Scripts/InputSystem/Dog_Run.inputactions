@@ -11,7 +11,7 @@
                     "id": "5fcd0827-6967-4eba-9b5d-c4d7e07d3f33",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "UpFlick",
+                    "interactions": "",
                     "initialStateCheck": true
                 },
                 {
@@ -29,7 +29,7 @@
                     "id": "18a1c00f-9ab8-482e-8ac1-21da12562f75",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "MultiTap",
+                    "interactions": "",
                     "initialStateCheck": true
                 },
                 {
@@ -38,7 +38,7 @@
                     "id": "1f16f9fa-f252-447f-b2a7-97ec22b11b26",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "DownFlick",
+                    "interactions": "",
                     "initialStateCheck": true
                 },
                 {
@@ -47,7 +47,7 @@
                     "id": "c7828a9f-c96c-478f-90f3-de22a7e35fd7",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Tap",
+                    "interactions": "",
                     "initialStateCheck": true
                 },
                 {
@@ -56,7 +56,7 @@
                     "id": "c8402685-903b-4cff-ad83-0184eb5ab118",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Tap",
+                    "interactions": "",
                     "initialStateCheck": true
                 }
             ],
@@ -65,6 +65,17 @@
                     "name": "",
                     "id": "c2af22c5-1fb3-4655-ba22-6f8ecfac1375",
                     "path": "<Touchscreen>/primaryTouch",
+                    "interactions": "UpFlick",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2f08cd6d-e230-414e-b963-f373df35f157",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -87,6 +98,17 @@
                     "name": "",
                     "id": "da446061-aa37-432c-a2b0-7a95a30d06e0",
                     "path": "<Touchscreen>/primaryTouch/tap",
+                    "interactions": "MultiTap",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pee",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "867f65d9-2c02-434f-8931-59582f643d1a",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -98,6 +120,17 @@
                     "name": "",
                     "id": "bc3c6368-50b6-437b-a6a7-bb38c0887b24",
                     "path": "<Touchscreen>/primaryTouch",
+                    "interactions": "DownFlick",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TurnCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e24b021f-7f51-4165-9dde-8306d9907717",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -109,6 +142,17 @@
                     "name": "",
                     "id": "b7a65036-1a5c-4c23-ac2a-b2349329eaa6",
                     "path": "<Touchscreen>/primaryTouch",
+                    "interactions": "Tap",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeGameStatusTitleToGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "281d1a22-f2eb-48d4-b1e6-bcbfb6c9e236",
+                    "path": "<Keyboard>/anyKey",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -120,6 +164,17 @@
                     "name": "",
                     "id": "f8bf9096-c4ef-4224-b20f-dc6e7a4e7fd4",
                     "path": "<Touchscreen>/primaryTouch",
+                    "interactions": "Tap",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ReloadGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ed029e91-67b5-4efd-8f54-a2730c368e17",
+                    "path": "<Keyboard>/anyKey",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

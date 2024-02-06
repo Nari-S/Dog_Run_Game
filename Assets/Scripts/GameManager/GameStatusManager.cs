@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Threading;
@@ -8,6 +8,7 @@ using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using Cysharp.Threading.Tasks;
 
 public class GameStatusManager : MonoBehaviour
 {
@@ -41,7 +42,8 @@ public class GameStatusManager : MonoBehaviour
         /* ゲームステータスがTitleToGameになった後，n秒待ってゲーム本編に遷移 */
         this.UpdateAsObservable().Where(_ => gameStatus == GameStatus.TitleToGame).Subscribe(async _ =>
         {
-            await Task.Delay(transitionDurationTitleToGame);
+            //await Task.Delay(transitionDurationTitleToGame);
+            await UniTask.Delay(transitionDurationTitleToGame);
             gameStatus = GameStatus.Game;
         })
         .AddTo(this);
@@ -61,7 +63,8 @@ public class GameStatusManager : MonoBehaviour
         /* ゲームステータスがGameToScoreになった後，m秒待ってスコア画面に遷移 */
         this.UpdateAsObservable().Where(_ => gameStatus == GameStatus.GameToScore).Subscribe(async _ =>
         {
-            await Task.Delay(transitionDurationGameToScore);
+            //await Task.Delay(transitionDurationGameToScore);
+            await UniTask.Delay(transitionDurationGameToScore);
             gameStatus = GameStatus.Score;
         })
         .AddTo(this);
