@@ -162,6 +162,17 @@
                 },
                 {
                     "name": "",
+                    "id": "413b8aed-ee84-406c-95c4-5b2c2659eea2",
+                    "path": "<Mouse>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeGameStatusTitleToGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "f8bf9096-c4ef-4224-b20f-dc6e7a4e7fd4",
                     "path": "<Touchscreen>/primaryTouch",
                     "interactions": "Tap",
@@ -175,6 +186,17 @@
                     "name": "",
                     "id": "ed029e91-67b5-4efd-8f54-a2730c368e17",
                     "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ReloadGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "143248fc-9c22-4209-b465-608aeece9435",
+                    "path": "<Mouse>/press",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

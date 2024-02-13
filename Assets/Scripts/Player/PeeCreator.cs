@@ -26,7 +26,7 @@ public class PeeCreator : MonoBehaviour
     {
         peeSize = new Vector3(1.5f, 1f, 3f);
         peeDuration = 0.5f;
-        peeWaterContentConsumption = 25f;
+        peeWaterContentConsumption = 30f;
 
         /* startで実行
         if (!TryGetComponent(out waterContentManager)) Debug.Log("IWaterContentManager is not attached to the object.");
