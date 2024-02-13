@@ -6,7 +6,7 @@ using UniRx.Triggers;
 
 public class Water : MonoBehaviour
 {
-    [SerializeField] private float waterCotentChangeAmount = 2;
+    [SerializeField] private float waterCotentChangeAmount = 1;
     private IWaterContentManager waterContentManager;
     private DogAudioController dogAudioController;
 
